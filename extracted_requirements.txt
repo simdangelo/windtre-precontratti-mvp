@@ -1,0 +1,688 @@
+Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarieProject Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarieAutomazione Creazione Sintesi Contrattuali e Trasparenze tariffarieProject Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarie                                                                           
+
+Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarie
+
+Project 
+Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarie
+
+
+Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarie
+
+Project 
+Automazione Creazione Sintesi Contrattuali e Trasparenze tariffarie
+
+
+
+
+Requisito
+
+
+
+
+Descrizione generale 
+Si richiede una soluzione di uniformazione e automazione che semplifichi, riducendone la manualità, la gestione delle creazioni/modifiche delle Sintesi Contrattuali (Sintesi) e delle Trasparenze Tariffarie Commerciali (Trasparenze), dei seguenti mercati e segmenti (con segregazione utenti e relativa ownership, in modo che l’utente possa gestire solo mercato e segmento di sua competenza):
+WINDTRE MOBILE GA CONSUMER – Vaccari Beatrice / Leone Alissa Lucia
+beatrice.vaccari@windtre.it
+alissalucia.leone@windtre.it
+WINDTRE MOBILE CB CONSUMER – Miletto Silvia Virginia / Fakir Mahal
+silviavirginia.miletto@windtre.it
+manal.fakir@windtre.it
+WINDTRE MOBILE GA MICROBUSINESS* - Ilaria Risoluto
+ilaria.risoluto@windtre.it
+WINDTRE FISSO GA e Cross Selling CONSUMER – Colombo Daniela / Conta Susanna / Bitetto Angela
+daniela.colombo@windtre.it
+susanna.conta@windtre.it
+Angela.Bitetto@windtre.it
+WINDTRE FISSO CB CONSUMER - D'Amario Barbara / Tuffi Lamberto (sostituito da Alessandro Amatori) / Cicco Laura
+barbara.damario@windtre.it
+lamberto.tuffi@windtre.it à sostituito da alessandro.amatori.windretail@windtre.it
+laura.cicco@windtre.it 
+WINDTRE FISSO GA e Cross Selling MICROBUSINESS – Tucciarone Cinzia / Prizzon Valentina / Intermoia Alessandra
+cinzia.tucciarone@windtre.it
+Valentina.Prizzon@windtre.it
+Alessandra.Intermoia@windtre.it 
+WINDTRE FISSO CB MICROBUSINESS – Cunsolo Giuseppe / Giraldi Barbara / Liguori Vincenzina
+giuseppe.cunsolo@windtre.it
+Barbara.Giraldi@windtre.it
+vincenzina.liguori@windtre.it 
+WINDTRE ETNICO CONSUMER GA/CB – Pavan Tatiana / Cancian Erika / Ronci Roberta / Immacolata Laudisio
+Tatiana.Pavan@windtre.it
+erika.cancian@windtre.it
+Roberta.Ronci@windtre.it
+Immacolata.Laudisio@windtre.it 
+VERY MOBILE – Serafini Germana / Delrio Mauro
+Germana.Serafini@windtre.it
+mauro.delrio@windtre.it 
+* WINDTRE MOBILE CB MICROBUSINESS non impattato (Orrù Barbara / Grasso Emanuela / Lauritano Antonio)
+
+Sia per le Sintesi sia per le Trasparenze, le informazioni/le base dati di oggi sono distribuite sui file Word, PDF ed Excel nei PC delle singole persone di marketing dei diversi mercati coinvolte nel processo AS IS.
+Le modifiche commerciali (pianificate e più frequenti) avvengono tipicamente in occasione dei canvas (3-4 volte l'anno), mentre le modifiche regolamentari (meno prevedibili) dipendono da delibere esterne. Ogni modifica commerciale comporta la produzione contestuale di una o più Sintesi e Trasparenze per i diversi mercati e segmenti.
+
+Le Sintesi sono composte da una serie di sezioni, ciascuna dedicata a specifici argomenti. Alcune di queste sezioni contengono campi/informazioni comuni a tutti i documenti WINDTRE — ad esempio recesso, costi, servizi inclusi, bollini per identificazioni tecnologie (Delibere AGCOM), ecc. — mentre altre variano in funzione del contenuto dell’offerta. Inoltre, le stesse sezioni contengono campi fissi (che non cambiano mai o raramente/non più di una volta all’anno) e campi variabili (dinamici che cambiano in occasione dei 3-4 canvass all’anno o per delibere esterne). Per Very Mobile la struttura è simile, ma non identica, a quella WINDTRE.
+Attualmente, la stessa modifica che interessa più Sintesi deve essere inserita manualmente su ciascun documento, comportando un notevole effort operativo e un allungamento dei tempi di aggiornamento.
+Le Trasparenze, al pari delle Sintesi, sono composte da varie sezioni da popolare in base alle caratteristiche dell’offerta. Anche in questo caso, il documento contiene campi fissi e campi variabili in base al mercato e all’offerta (con le stesse logiche spiegate sopra).
+
+L’esigenza comune, quindi, a tutti i mercati e segmenti coinvolti, è di avere uno strumento che consenta di apportare le modifiche necessarie una sola volta e che queste modifiche si propaghino su tutti i documenti, sintesi e/o trasparenze, impattati da tali variazioni.
+As is Business Process 
+Sia per le Sintesi sia per le Trasparenze, sia in caso di nuove offerte sia in caso di modifiche, si parte da una base dati esistente (documento esistente salvato nel pc della persona) e si modificano/aggiornano manualmente solo gli elementi necessari o, altrimenti, si può anche creare un nuovo documento da zero, se richiesto. Si procede a ripetere la stessa modifica per ogni singolo documento.
+Le Trasparenze vengono caricate manualmente:
+in formato PDF sulle pagine delle trasparenze tariffarie dei siti windtre.it e verymobile.it.
+in formato EXCEL sul sito AGCOM 
+Le Sintesi vengono caricate manualmente:
+in formato PDF su Adobe e si propagano sull’e-commerce dei siti windtre.it e verymobile.it
+in formato PDF su Adobe e si propagano su POS
+in formato PDF sulle pagine delle trasparenze tariffarie dei siti windtre.it e verymobile.it.
+
+Link pagine dove vengono caricati i documenti di Sintesi e Trasparenze:
+https://www.windtre.it/precontratti
+https://www.windtre.it/trasparenza-tariffaria
+https://verymobile.it/trasparenza-tariffaria
+https://confrontaofferte.agcom.it/operatore/7fb9785b021c4bcf87170f264b5c2377/
+
+Sintesi
+Il numero di righe dei campi “prezzo, costi e servizi”, può variare a seconda dell'offerta, con una frequenza in base ai canvass (3-4 volte l’anno) o all’occasione per delibere esterne
+Di seguito il numero massimo di righe per ciascun segmento/mercato ad oggi, ma che viene anche richiesto, relativo a ciascuna griglia presente nei vari paragrafi/sezioni. Si richiede di non blindare la possibilità di aggiungere altre righe per eventuali richieste future:
+WINDTRE MOBILE GA CONSUMER à 12
+Prezzo à 12
+Costi à 5
+Servizi à5
+WINDTRE MOBILE CB CONSUMER à 15
+Bundle à 6 
+Prezzo à 4
+Costi à 6
+Servizi (totali) à15 
+WINDTRE MOBILE GA MICROBUSINESS à 11
+Prezzo à 4
+Costi à 6
+Servizi (totali) à 11
+WINDTRE FISSO GA CONSUMER à 
+Prezzo à 5
+Costi à 8
+Servizi (totali) à 14
+WINDTRE FISSO CB CONSUMER à 
+Prezzo à 5
+Costi à 12
+Servizi (totali) à 14
+WINDTRE FISSO GA MICROBUSINESS à 
+Prezzo à 5
+Costi à 8
+Servizi (totali) à 14
+WINDTRE FISSO CB MICROBUSINESS à 
+Prezzo à 5
+Costi à 8
+Servizi (totali) à 14
+WINDTRE ETNICO CONSUMER GA/CB à 10
+Prezzo à 4
+Costi à 7
+Servizi (totali) à 10
+VERY MOBILE à 3
+Non è possibile lasciare righe vuote per motivi di accessibilità
+Necessario controllo manuale di accessibilità sul PDF (operazione ripetuta ad ogni modifica del documento)
+I bollini:
+Riguardano solo la Sintesi, non la trasparenza
+sono obbligatori e devono essere forniti in alta risoluzione
+la loro posizione deve essere accanto alla parola chiave della tecnologia e non alla fine della frase
+possono essere associati tramite flag o dizionari che permettano di selezionare il bollino corretto in base alla tecnologia
+devono essere inseriti nei PDF con testo alternativo per garantire la lettura da parte di screen reader, in linea con le richieste di Agcom e le best practice di accessibilità
+Tra la versione standard e quella full speed cambia solo il campo relativo alla velocità e il bollino grafico
+Una volta all'anno viene aggiornato il coefficiente RDA, che determina i giga utilizzabili in Unione Europea; viene modificato qualche mese prima della scadenza annuale fissata al 31/12. La sezione RDA è presente in tutti i segmenti/mercati e viene aggiornata simultaneamente, ma il valore inserito dipende dal canone del servizio per ciascun cliente, rendendo il campo RDA comune ma il contenuto variabile
+Naming e condizioni della convergenza mobile luce e gas vengono aggiornati almeno una volta l'anno, e le modifiche sono comuni a tutti i segmenti e mercati
+Trasparenze
+Presente sempre un codice alfanumerico unico fornito da AGCOM massimo 10 giorni dopo il caricamento del documento
+solo nel caso di nuove offerte il campo sarà valorizzato come 'nuova' fino all'assegnazione del codice da parte di AGCOM
+W3 GA MOBILE CNS, W3 GA/CB FISSO CNS, W3 GA/CB FISSO MB, crea una trasparenza distinta per ogni combinazione offerta-punto prezzo, a cui è associato un codice alfanumerico. Stessa cosa vale anche per VERY MOBILE e W3 Etnico CNS GA CB
+W3 CB MOBILE CNS produce un numero limitato di trasparenze tariffarie raggruppando le offerte per tipologia e riportando solo il punto prezzo maggiore, a cui è associato sempre un unico codice alfanumerico. È stato spiegato che ogni modifica su punto prezzo più alto comporta la chiusura della trasparenza precedente e l'apertura di una nuova, mentre modifiche su punti prezzo inferiori non richiedono aggiornamenti
+Rispetto di regole stringenti imposte da AGCOM, pena il rifiuto del caricamento
+Di seguito link vademecum AGCOM del formato EXCEL richiesto, depositato in share: Vademecum AGCOM per la compilazione delle Trasparenze Tariffarie.pdf 
+Alla fine del requisito inserito screenshot dell’intero vademecum*
+Collegamento a Delibera 252 16 CONS - Allegato 1
+Quando un'offerta viene chiusa, è necessario produrre sia il PDF che l'Excel con lo stato 'chiuso' e la data di fine, mentre per la nuova offerta si genera un nuovo record con stato 'nuova' fino all'assegnazione del codice AGCOM. Il naming dei file deve essere coerente tra versione chiusa e nuova
+To be Business Process
+Si richiede:
+La costruzione di una Base Dati
+L’Automazione della creazione dei documenti di Sintesi e Trasparenze
+
+
+Costruzione di una Base Dati
+
+Le informazioni, presenti nei documenti di oggi di Sintesi e Trasparenze*, dovranno essere centralizzate in un DB unico che produrrà, poi, gli output
+Questo DB deve:
+Essere flessibile ossia permettere la possibilità di integrare eventuali nuovi campi futuri non previsti ad oggi
+Tracciare lo stato di ogni offerta (attiva, chiusa, nuova); si riporta sotto il dettaglio
+Acquisire il relativo codice AGCOM inserito dagli utenti post rilascio del codice da parte di AGCOM
+*nella cartella condivisa in share sono presenti i documenti delle offerte di esempio rappresentative da utilizzare per costruire la base dati necessaria all’automazione. Le seguenti offerte sono divise in mercati e segmenti.
+
+Per lo stato dell’offerta, il file interessato è l’Excel relativo alla Trasparenza Tariffaria. Si definiscono di seguito i tre stati di ogni offerta (nuova, aperta, chiusa):
+NUOVA: quando arriva una nuova offerta, l’utente inserisce il valore “Nuova” nel campo “Stato dell'offerta” e la data di inizio nel campo “Data di inizio sottoscrivibilità dell'offerta”.
+APERTA: quando arriva il codice da AGCOM, l’utente lo inserisce nel campo “Stato dell'offerta”. Di seguito, viene quindi prodotto un file Excel e la sua conversione in PDF.
+CHIUSA: ad un certo punto l’offerta viene chiusa (ovvero non è più sottoscrivibile), quindi l’utente inserisce il valore “Chiusa” nel campo “Stato dell'offerta” e la data di fine nel campo “Data di fine sottoscrivibilità dell'offerta”. Di seguito, viene quindi prodotto un file Excel e la sua conversione in PDF (sono due nuovi file che non si sovrascrivono a quelli dello stato “APERTA”).
+LASCIO I COMMENTI PER COMODITA’, MA GLI STATI SONO STATI CONFERMATI
+
+Automazione
+L’obiettivo principale è lo sviluppo di uno strumento che consenta di applicare una modifica una sola volta, affinché l’aggiornamento venga automaticamente propagato a:
+tutti i documenti (intervento massivo)
+ai soli documenti correlati e impattati da tale variazione (possibilità di selezionare un set)
+Sintesi e/o Trasparenze
+Sintesi e Trasparenze sono documenti distinti, con contenuti e finalità differenti, e le modifiche a uno non devono necessariamente riflettersi sull’altro sempre; la base dati e i processi di automazione devono tenerne conto. Questo perché non è detto che le modifiche sul documento di sintesi impattino anche il documento della trasparenza e viceversa. Il processo di automazione produrrà tutte le trasparenze e le sintesi possibili in base ai dati caricati, ma l'utente potrà selezionare solo i documenti di suo interesse. 
+Si richiede, altresì, la possibilità di duplicare (massivamente o su base selezione set) i documenti che saranno oggetto di modifiche. È stata discussa la possibilità di inserire un flag per generare solo sintesi, solo trasparenze o entrambe. Ossia l’utente potrà quindi scegliere/selezionare le offerte di suo interesse per poter procedere agli output sempre di suo interesse
+Gli output saranno inviati tramite e-mail in formato compresso. È stata valutata la possibilità di organizzare gli output nello zip in sottocartelle distinte per sintesi e trasparenze, facilitando la ricerca e la gestione dei documenti
+
+Il sistema dovrà produrre quattro output nei seguenti formati:
+La sintesi contrattuale in formato WORD
+La sintesi contrattuale in formato PDF
+La trasparenza tariffaria in formato EXCEL
+La trasparenza tariffaria in formato PDF
+La responsabilità della distribuzione degli output sui canali previsti (sito windtre/verymobile tramite Adobi, AGCOM) resta in carico agli utenti
+Il formato EXCEL per AGCOM ha regole specifiche dettate da AGCOM (vademecum inserito precedentemente in questo documento e caricato in share)
+Il formato PDF per i canali interni ha regole specifiche dettate da Adobi
+recepisce solo file in formato PDF ed alcuni caratteri non sono riconosciuti (se no il file va in KO)
+dimensioni pdf non superiore ai 2 MB
+lunghezza massima del nome file pdf 160 caratteri (comprensivi dell’estensione.pdf)
+Caratteri ammessi nel nome file: punto (.), undescore (_) e trattino (-). Non sono ammessi i seguenti caratteri \ / : * ? " < > | e lo spazio tra i caratteri
+Adobe non permette il caricamento di un documento avente lo stesso nome file
+L’applicativo Adobi esporta file in formato csv, pertanto, per poter procedere con eventuali mappature dei documenti, si richiede la possibilità di scaricare dal nuovo tool, un file contenente la mappatura delle sintesi, che sia dello stesso formato di Adobi
+È stato concordato che i soli elementi fissi nei documenti sono le etichette e i titoli (es. 'Nome Offerta', 'Servizi'), mentre tutti gli altri campi possono ritenersi variabili, seppur con frequenze diverse
+proposto di fornire strumenti che permettano la modifica centralizzata di campi comuni a più documenti, ad esempio tramite un database o un foglio Excel, evitando la necessità di modificare manualmente decine di file Word. È stato discusso se sia opportuno avere un unico template per tutti i mercati o più template specifici, con la tendenza a prevedere più template in base alle peculiarità di ciascun mercato (fisso, mobile, consumer, microbusiness), lasciando comunque la valutazione finale all'analisi tecnica
+È stato stabilito che il nome del file deve includere:
+Sicuramente per tutti il nome dell'offerta, la tecnologia e il prezzo, secondo quanto richiesto dal team vendite
+la possibilità di lasciare una parte del nome file editabile dall'utente per esigenze specifiche, ma sempre nel rispetto dei vincoli di lunghezza e caratteri ammessi
+È stato concordato che ogni utente dovrà poter modificare solo i documenti relativi al proprio mercato/segmento. Qui i dettagli degli utenti da abilitare come editor per segmento e mercato di competenza
+
+Sintesi
+Per WINDTRE, il documento WORD che recepisce le modifiche deve avere il nome file univoco, essere trasformato in formato PDF ed essere reso accessibile*
+       Per nome file univoco si intende che ogni sintesi deve avere un proprio nome specifico, diverso    dagli altri, così da identificare chiaramente l’offerta di riferimento. Per il mercato fisso GA, CNS e MB, il nome del file deve essere composto da:
+Nome commerciale dell’offerta
+Tecnologia
+Prezzo
+Elemento diversificante, che può essere:
+la data, oppure
+il canale (ad esempio: pdv, tls, online, web, …)
+       L’elemento diversificante è necessario perché Adobe non consente il caricamento di due      
+       documenti con lo stesso nome file.
+*Un PDF accessibile è un documento digitale progettato per essere letto, compreso e navigato autonomamente da chiunque, incluse persone con disabilità visive, cognitive o motorie che utilizzano tecnologie assistive (come screen reader). Deve rispettare specifici criteri tecnici, tra cui testo ricercabile, ordine di lettura strutturato e testo alternativo per le immagini
+Per le offerte FISSO, il nome file univoco deve comprendere
+Nome offerta commerciale
+Tecnologia
+Prezzo
+Data validità (o altra info che solitamente inseriamo per diversificare il titolo dalla stessa sintesi chiusa altrimenti Adobi non carica il documento)
+Lato Very Mobile, il naming desiderato dei documenti deve rispecchiare la struttura “data creazione+prezzo+GIGA+costoattivazione+nomePO” separati dagli underscore (yyyymmdd_x.xx_xxGB_x.xx_POXXXXXX), ma fondamentale che il nome del file contenga il PO, in quanto unico identificativo tecnico dell’offerta
+Poiché non è possibile lasciare righe vuote per motivi di accessibilità, un’ipotesi è inserire il numero max di righe + scrivere 'non applicabile' nelle righe vuote (eventualmente da condividere con legal) o aggiungere/eliminare righe dinamicamente à È emersa la necessità di poter editare un numero variabile di righe nelle tabelle dei documenti, in modo che vengano visualizzate solo le righe effettivamente compilate, senza righe vuote o con valori placeholder come 'NA'. Sono state valutate diverse soluzioni, tra cui la creazione di template dinamici o la modifica delle tabelle in base alle esigenze, evitando la proliferazione di template diversi per ogni possibile combinazione di righe
+Richiesta la possibilità di riconoscere automaticamente la tecnologia rispetto al bollino corrispondente
+Il campo RDA è comune ma il contenuto variabile tra segmenti e mercati
+Naming e condizioni della convergenza mobile è comune a tutti i segmenti e mercati
+Il numero di righe dei campi deve rispettare il numero massimo ad oggi, totale e per sezione, per tutti i segmenti e mercati e deve rispettare l’impossibilità di lasciare righe vuote. Si richiede, inoltre, di non blindare la possibilità di aggiungere altre righe per eventuali richieste future. Ulteriori dettagli qui
+I bollini:
+devono essere posizionati vicino alla parola o frase di riferimento. ok in una cella unificata a destra del testo, garantendo che siano sempre leggibili e non troppo piccoli o grandi. Si è discusso anche della possibilità di utilizzare celle nascoste senza bordo per facilitare l'automazione e la standardizzazione del template
+sollevato dubbi sull'accessibilità delle tabelle con celle unificate e immagini, suggerendo di effettuare test con diversi browser e lettori di schermo per verificare la corretta lettura dei bollini
+devono mantenere la stessa dimensione all'interno dello stesso documento (dove ripetuti) e tra i diversi documenti
+il pantone dei bollini deve rispettare quello AGCOM
+Delibera 106/25/CONS - i bollini dovranno seguire le seguenti indicazioni di colore:
+verde (riferimento Pantone n. 361, CMYK 62/0/76/31)
+giallo (riferimento Pantone n. 137, CMYK 0/36/100/0)
+rosso (riferimento Pantone n. 192, CMYK 0/100/69/11)
+Per le sintesi delle offerte fisso, possiamo eliminare il secondo bollino della Fibra, quello che si trova all’interno del testo libero (che sarà riadattato), mentre restano confermati il primo ed il terzo bollino della fibra (quelli posizionati all’interno delle griglie)
+
+Tabelle
+È stato proposto di uniformare la struttura delle tabelle prezzi tra i diversi template (nello specifico very che si adatta a windtre) 
+È stato concordato che, devono essere previste entrambe le casistiche:
+dove c’è campo (figlio o padre) ND si inserirà la dicitura 'Non applicabile' 
+dove il campo è vuoto/non compilato, la riga non deve essere visualizzata nell’output finale
+si è concordato che le note devono essere posizionate alla fine della tabella a cui fanno riferimento (e non in mezzo alla tabella spezzettandola e neanche a piè di pagina) 
+È stato spiegato che ogni tabella (es. prezzi) contiene campi principali detti 'padre' (es. costo mensile, costo attivazione) e sotto-voci 'figli' (es. nuovi clienti, portabilità), e che questa struttura deve essere mantenuta per garantire l’automazione
+È stato proposto di assegnare un titolo a tutte le tabelle per facilitare la referenziazione e l'automazione, ma si è deciso di verificare con il regolamentare se questa modifica sia accettabile rispetto agli standard richiesti
+discusso se utilizzare il singolare o il plurale per i titoli delle tabelle (prezzo, prezzi, costi), per coerenza tra i diversi documenti e per la necessità di uniformare la terminologia 
+
+
+
+
+
+
+
+MAPPATURA TABELLA: CAMPI PADRE E FIGLI  si deve prendere come esempio la sintesi con il massimo numero di campi padre e figlio
+
+TABELLE MOBILE W3 GA E CB CONSUMER
+N.B Sotto le tabelle deve essere possibile inserire note riferite ai padri o figli e link. 
+N.B tutti i numeri di padri e figli sono da intendersi come numero massimo.
+
+CAMPI TABELLA 1: nessun titolo 3 padri, 3 figli  
+
+CAMPI TABELLA 2: titolo Descrizione Offerta, fino a 5 padri e 5 figli 
+
+
+CAMPI TABELLA 3: titolo velocità del servizio Internet e mezzi di ricorso, massimo 2 padre e 4 figli 
+
+
+CAMPI TABELLA 4: titolo prezzo con 5 Campi padre + 6 figli sottostanti 
+-- 
+CAMPI TABELLA 5: nessun titolo, con 1 Campo padre + 5 figli (possibilità di averli disposti affianco come da immagine oppure sotto, come nelle tabelle precedenti)
+
+
+CAMPI TABELLA 6: titolo Servizi con 3 Campi padre + 8 figli 
+Servizi inclusi gratuiti
+Segreteria Telefonica
+Servizio Ti ho cercato
+Blocco servizi a sovrapprezzo
+ND
+Servizi a pagamento non inclusi nel costo mensile
+Notifica sms 0,29euro se impostato
+
+CAMPI TABELLA 7: titolo Durata, rinnovo e risoluzione con 3 Campi padre + 3 figli (possibilità di averli disposti affianco come da immagine oppure sotto, come nelle tabelle precedenti)
+
+Durata, rinnovo e risoluzione
+
+Durata minima del contratto del servizio
+24 mesi
+Costo disattivazione anticipata del servizio
+È previsto l’addebito della quota non versata del costo di attivazione, per i mesi residui (5)
+
+È previsto l’addebito di 10 euro pari al costo realmente sostenuto da Wind Tre per la disattivazione dell’utenza come previsto dalle condizioni generali di contratto
+Condizioni di rinnovo o risoluzione al termine della durata minima, se prevista
+L’offerta resta attiva alle stesse condizioni senza vincoli salvo recesso
+
+(5) In caso di recesso anticipato rispetto ai 24 mesi si ricorda di consultare la tabella relativa all’attivazione www.windtre.it/tabellacostiattivazione 
+
+CAMPI TABELLA 8: - Titolo “Servizi Aggiuntivi”, 10 Padri e 2 Figli per ciascun padre
+
+WINDTRE PIU’ SICURI MOBILE
+
+PIU’ SICURI MOBILE permette di proteggersi da Virus, Malware e Phishing quando si naviga su rete WINDTRE limitando l’accesso a siti potenzialmente rischiosi.
+Costo 
+
+0,99 euro al mese con primo mese gratuito
+Costo attivazione opzione
+0
+WINDTRE PIU’ SICURI MOBILE PRO
+
+PIU’ SICURI MOBILE PRO offre protezione totale sia per lo smartphone sia per la navigazione internet. Scaricando l’App WINDTRE SECURITY PRO+ avrà un antivirus, una protezione contro gli sms fraudolenti, il furto di credenziali durante la navigazione e una VPN che protegge la sua privacy quando naviga su reti WiFi pubbliche e private.
+Scarica l'App WINDTRE Security Pro+ al seguente link windtre.it/security. L’App è compatibile con sistema operativo Android (versione 5.0 e successive) e IOS (versione 10 e successive).
+Costo 
+
+1,99 euro al mese con primo mese gratuito
+Costo attivazione opzione
+0
+RELOAD FOREVER
+
+WINDTRE fornisce, a richiesta, un servizio addizionale che protegge lo smartphone qualsiasi cosa accada, eccetto furto o smarrimento. Il servizio offerto da WINDTRE e Bolttech Device Protection (Italy) S.r.l. garantisce riparazione con parti originali e sostituzione con uno smartphone identico o simile tra quelli disponibili all’interno della stessa fascia di prezzo. 
+Il servizio può essere attivato contestualmente alla sottoscrizione di una nuova offerta mobile Voce con Easy Pay, alla richiesta di un cambio offerta verso offerta mobile Voce con Easy Pay, oppure può essere attivato a clienti con un’offerta mobile Voce con Easy Pay già attiva.
+Info, termini e condizioni su Reload Forever.
+
+TABELLE MOBILE W3 CONSUMER – ETNICO
+condizioni promo ha la riga vuota -> Non per tutte le offerte. Ad esempio, per l’offerta China Box viene riportato “Costo 88,88€ valido per un anno. Dopo 12 mesi, il costo dell’offerta è di 8,88€/mese, salvo disdetta”. In genere riportiamo se ci sono costi o sconti variabili nel tempo
+la tabella SERVIZI sembra essere compresa in costo. vedi punto 1 VERY. Lato nostro va bene la soluzione di inserire il titolo “Servizi” per differenziarlo da “Costi” 
+[verificare il numero max mappate anche rispetto al req: collegato al punto 6 TUTTI MER/SEG] Di seguito le tabelle:
+
+ Prezzo: 5 Campi padre + 6 righe sottostanti così come da immagine (lasciare la possibilità di inserire link a piè tabella) 
+-- 
+CDA:1 Campo padre + 4 righe sottostanti così come da immagine (anche in questo caso la riga “eventuali scontistiche e loro durata” viene popolata o meno a seconda dell’offerta
+
+
+ Servizi: 2 Campi padre + 5 righe sottostanti così come da immagine
+
+Durata, rinnovo e risoluzione: 3 campi padre + riga a lato così come da immagine (lasciare la possibilità di inserire link a piè tabella)
+
+ 
+TABELLE MOBILE VERY MOBILE
+N.B Sotto le tabelle deve essere possibile inserire note riferite ai padri o figli e link. 
+N.B tutti i numeri di padri e figli sono da intendersi come numero massimo.
+
+CAMPI TABELLA 1: nessun titolo 3 padri, 2 figli  
+
+CAMPI TABELLA 2: titolo Servizi e Apparecchiature, fino a 6 padri e 6 figli 
+Servizio/i e apparecchiature
+
+CAMPI TABELLA 3: titolo velocità del servizio Internet e mezzi di ricorso, massimo 1 padre e 2 figli 
+Velocità del servizio internet e mezzi di ricorso
+
+Velocità di connessione internet massima stimata(2)
+
+
+
+
+2000,00 Mbps in download
+
+200,00 Mbps in upload
+
+(2) La velocità effettiva di navigazione varia in funzione di numerosi fattori: tecnologia di rete, copertura, intensità di traffico, dispositivo utilizzato, ecc. I Giga inclusi sono validi solo per le connessioni di rete 4G/5G/LTE, HSDPA, UMTS, EDGE o GPRS, e non per le connessioni GSM. Per navigare in 5G è necessario avere un’offerta abilitata, un dispositivo 5G ed essere in una zona coperta dal 5G di Very Mobile; info e copertura su verymobile.it/copertura.
+
+
+
+CAMPI TABELLA 4: titolo prezzo con 7 Campi padre + 10 figli sottostanti 
+
+-- 
+CAMPI TABELLA 5: titolo, con 3 Campo padre + 3 Campi figli (disposti affianco) 
+Rinnovo e risoluzione
+
+Durata minima del contratto
+ND
+Costo disattivazione
+ND
+Condizioni di rinnovo o risoluzione al termine della durata minima, se prevista
+ND
+
+
+
+TABELLE W3 FISSO CB CONSUMER (MIGRAZIONI)
+La tabella con il titolo “Costi” include anche il padre “Servizi a pagamento non inclusi nel costo mensile”, lato Fisso CB Consumer ok per la creazione di un nuovo titolo denominato “Servizi a Pagamento” che includa in tabella il padre “Servizi a pagamento non inclusi nel costo mensile”.
+Mappatura campi sintesi di seguito: 
+
+CAMPI TABELLA 1: nessun titolo 3 padri, 3 figli (come da immagine)
+
+
+CAMPI TABELLA 2: titolo servizio/i e apparecchiature, 4 padri e 4 figli (come da immagine)
+
+
+CAMPI TABELLA 3: titolo velocità del servizio Internet e mezzi di ricorso, 1 padre e 2 figli (come da immagine).
+Sotto la tabella indicata è presente del testo con una nota relativa al figlio 1.
+
+Immagine nota e testo collegata a tabella 3: 
+
+
+CAMPI TABELLA 4: titolo prezzo, 1 padre e 1 figlio (come da immagine). 
+Sotto la tabella prezzo viene indicata la composizione del costo canone (campo libero).
+
+CAMPI TABELLA 5: titolo costi, 5 padri e 8 figli (come da immagine). 
+Tra le varie tabelle sono presenti alcuni testi liberi. 
+(vedi punto 1 per suddivisione in due)
+
+
+
+
+
+
+CAMPI TABELLA 6: titolo Durata, rinnovo e risoluzione, 4 padri e 5 figli (come da immagine). 
+A fine tabella è presente un campo libero. 
+
+TITOLO: Funzioni per gli utenti finali con disabilità + campo libero
+Funzioni per gli utenti finali con disabilità
+Agevolazione Economica Utenti Disabili: WINDTRE si allinea alla delibera 290/21/CONS (Disposizioni in materia di misure riservate a consumatori con disabilità per i servizi di comunicazione elettronica da postazione fissa e mobile) e successive modifiche. Ulteriori dettagli sono disponibili separatamente: link per Agevolazioni per utenti con disabilità 
+
+TITOLO: Modifiche + campo libero 
+
+
+
+
+
+
+TABELLE W3 FISSO CB MICRO (MIGRAZIONI)
+Valido anche per W3 FISSO GA CNS
+NB: abbiamo inserito come esempio tabelle e contenuti presi da più sintesi, al fine di considerare come esempi quelli con il numero massimo di campi.
+
+CAMPI TABELLA 1: nessun titolo 3 padri, 3 figli
+Nome Offerta 
+Super Fibra Professional 
+Disponibilità offerta
+10-02-2025
+Offerta valida fino al
+La sintesi contrattuale fornita è valida fino alla chiusura in sottoscrivibilità dell’offerta descritta. 
+
+
+CAMPI TABELLA 2: titolo servizio/i e apparecchiature, 4 padri e 4 figli
+Servizio/i e apparecchiature
+
+Servizi
+Fisso, fonìa e Internet in tecnologia FTTH 
+Traffico internet
+Illimitato
+Traffico fonia
+Illimitato
+Apparecchiature
+Modem Super Wi-Fi in vendita abbinata
+
+CAMPI TABELLA 3: titolo velocità del servizio Internet e mezzi di ricorso, 1 padre e 2 figli 
+Sotto la tabella indicata è presente del testo con una nota relativa al figlio 1.
+
+Velocità del servizio Internet e mezzi di ricorso
+
+Velocità massimo di connessione Internet 
+Fino a 300,00 Mbps in Download (1)
+Fino a 50,00 Mbps in Upload
+
+(1) Per navigare in 5G occorre avere un’offerta abilitata e un dispositivo 5G abilitato alla rete WINDTRE ed essere nelle aree coperte dal 5G di WINDTRE. Servizio 5G valido solo in Italia. Info, copertura e caratteristiche tecniche su www.windtre.it/5g
+Le velocità di navigazione citate sono le massime raggiungibili: quelle effettive dipendono dalla capacità dei server a cui si è collegati, dal livello di affollamento della rete e dalla capacità tecnica della linea (verificata successivamente all’attivazione del servizio). In caso di eventuali malfunzionamenti il cliente può sempre contattare il Call Center che comunicherà le modalità di un eventuale intervento. Offerta disponibile nelle città in copertura FWA 5G e soggetta a limitazioni tecniche geografiche. Come previsto dall’Art. 4 dell'allegato A della delibera 156/23/CONS, le informazioni relative alle caratteristiche e prestazioni dell’Offerta, alla tecnologia utilizzata e alle caratteristiche minime che il sistema di accesso dell’utente deve possedere al fine della integrale e corretta esecuzione del contratto di accesso a Internet, sono contenute nella Scheda di Trasparenza Tecnica relativa all’Offerta, pubblicate sul sito WINDTRE al link Trasparenza Tecnica
+ 
+CAMPI TABELLA 4: titolo prezzo, 1 padre e 2 figlio
+Sotto la tabella prezzo viene indicata la composizione del costo canone (campo libero).
+Prezzo
+
+Costo mensile
+
+Costo canone del servizio, salvo sconto canone dedicato
+29,99 euro 
+Per clienti che attivano una Seconda Linea Professional
++ 10 euro
+
+29,99 euro è composto, per i primi 48 mesi, da: 24 euro di canone del servizio e 5,99 euro di rata del modem; dopo i 48 mesi è composto da 29,99 euro di canone del servizio.
+
+Per i clienti che attivano, contestualmente alla prima, una Seconda Linea Professional il costo totale aumenta di 10 euro.
+La seconda linea può essere attivata e rimanere attiva solo come accessoria ad una linea principale.
+
+CAMPI TABELLA 5: titolo costi, 5 padri e 9 figli (3 tabelle). Una nota alla fine su IVA.
+Costi
+
+Costo di attivazione servizio
+24€ salvo promozioni dedicate
+Modem Wi-Fi 7 FRITZ!Box
+euro 5,99 al mese IVA inclusa per 48 mesi, già incluso nel costo complessivo dell’offerta
+Antenna 5G
+euro 9,99 al mese IVA inclusa per 48 mesi, già incluso nel costo complessivo dell’offerta
+
+
+Servizi inclusi nel costo mensile
+Chiamate illimitate verso tutti i numeri Fissi e Mobili Nazionali e verso i numeri Fissi di Europa Occidentale, USA e Canada. Con Europa Occidentale si intendono i seguenti Paesi: Andorra, Austria, Belgio, Danimarca, Finlandia, Francia, Germania, Grecia, Irlanda, Lussemburgo, Monaco, Olanda, Norvegia, Portogallo, Spagna, Svezia, Svizzera, Regno Unito.
+Seconda Linea Professional: per navigare e chiamare
+
+
+Servizi a pagamento non inclusi nel costo mensile
+Chiamate internazionali nei Paesi non inclusi, al seguente link: Tabella Tariffe Internazionali Rete Fissa
+Servizi supplementari presenti su: Link Servizi Supplementari 
+Più Sicuri Ufficio: il servizio permette la navigazione da rete fissa sicura e protetta da malware, virus, link dannosi e dalle e-mail di phishing. Protegge inoltre tutti i dispositivi connessi alla tua rete da possibili minacce. Il costo del servizio è di 1,49 euro al mese con rinnovo mensile automatico salvo disdetta. Il primo mese è gratuito. Per tutti i dettagli, le condizioni e le informazioni vai su Link a Più Sicuri Ufficio
+Assistenza Tecnica Box: Il servizio prevede l’intervento di un tecnico specializzato presso la sede del cliente per l'installazione e la configurazione delle funzionalità del Modem FRITZ!Box. Il tecnico potrà configurare: telefoni cordless DECT-GAP, interni telefonici, regole di instradamento chiamate, rubriche condivise, segreterie telefoniche e deviazioni di chiamata, applicazioni MyFritz! e APP!Fon su smartphone, servizio DDNS di FRITZ!Box (MyFRITZ!), Wi-Fi Guest con accesso tramite QR Code. Il tecnico potrà anche installare la cavetteria LAN collegata al modem. Il tecnico non è autorizzato a configurare Pos, teleallarmi, server, centralini/IP Phone di terze parti. Il servizio ha un costo di €99,99 una tantum oppure €3,99/mese per 24 mesi, addebitato sul metodo di pagamento scelto dal cliente in fase di attivazione dell’offerta Super Fibra Professional Box, direttamente nella prima fattura utile. L’addebito avviene anche nel caso in cui il tecnico incaricato non abbia potuto effettuare l’intervento concordato. È possibile prenotare il servizio presso il punto vendita durante la sottoscrizione dell’offerta Super Fibra Professional Box o tramite il Servizio Clienti 159.
+
+Tutti i prezzi sono da intendersi IVA esclusa salvo ove diversamente indicato.
+
+CAMPI TABELLA 6: titolo Durata, rinnovo e risoluzione, 4 padri e 5 figli
+A fine tabella è presente un campo libero. 
+Durata, rinnovo e risoluzione
+
+Durata minima del contratto del servizio
+24 mesi
+Condizioni di rinnovo o risoluzione al termine della durata minima
+Il contratto si rinnova automaticamente a tempo indeterminato, salvo disdetta da comunicarsi con almeno 30 giorni di preavviso rispetto alla scadenza.
+Condizioni risoluzione anticipata, oneri e costi
+In caso di recesso, anche attraverso un passaggio verso un altro operatore, sarà addebitato il costo previsto per dismettere la linea o trasferire il servizio. Per conoscere il costo vai sul sito windtre.it nella sezione Trasparenza Tariffaria alla voce Tabella dei Costi di Attivazione e Disattivazione del servizio di telefonia fissa e delle loro modalità di calcolo o se preferisci, clicca sul seguente link https://www.windtre.it/Document/trasparenza-tariffaria/documenti/tabella-costi-fisso.pdf. 
+Il recesso del Cliente può riguardare la sola offerta mobile o la sola offerta fissa oppure entrambe le linee. È pertanto necessario che il Cliente, nella propria eventuale richiesta di recesso, specifichi esattamente la propria volontà per evitare che l’una o l’altra linea rimangano attive nel caso in cui l’intenzione di recedere riguardasse entrambe.
+In presenza di contratti con compravendita rateizzata di prodotti e/o servizi ancora attivi ed offerti congiuntamente al servizio principale, saranno addebitate tutte le restanti rate dovute in unica soluzione o mantenendo la rateizzazione, secondo la scelta del cliente, che può essere modificata anche nella comunicazione di recesso o in caso di passaggio ad altro operatore.
+Condizioni di sblocco dell’apparato
+Non applicabile
+
+
+Il diritto di recesso può sempre essere esercitato attraverso le modalità riportate al link Come posso esercitare il diritto di recesso 
+
+FINE DOCUMENTO: titolo Modifiche + campo libero 
+Modifiche 
+WINDTRE potrà modificare le specifiche tecniche dei servizi, aggiornare i corrispettivi per i servizi, nonché variare le condizioni di contratto e le presenti condizioni, anche durante il periodo di durata minima contrattuale, dandone comunicazione al Cliente con preavviso non inferiore a 30 (trenta) giorni. Tali modifiche avranno efficacia decorso il periodo di preavviso. Entro 60 (sessanta) giorni dalla ricezione dalla comunicazione di modifica, il Cliente potrà recedere dal contratto senza che venga richiesto alcun corrispettivo per il recesso. Il diritto di recesso può essere esercitato attraverso le modalità riportate al seguente link: Diritto di Recesso
+
+
+TABELLE FISSO GA/Cross Selling MB
+Mappatura dei campi nelle rispettive tabelle.
+Si evidenzia che alcune sintesi possono presentare il medesimo numero di Figli associati agli stessi Padri, pur differenziandosi per la combinazione dei contenuti. Le immagini di seguito riportate risultano pertanto esaustive esclusivamente in termini di numerosità massima dei Figli adottati ad oggi, ma non dei relativi contenuti, che possono variare. A integrazione, saranno forniti i Figli con contenuti differenti rispetto a quelli illustrati, al fine di completare la mappatura.
+Si conferma infine che il documento ha carattere dinamico e potrà essere oggetto di future integrazioni, sia in riferimento ai Padri sia ai Figli.
+
+CAMPI TABELLA 1 
+Nessun titolo, 3 Padri, 3 Figli (come da immagine) e 1 bollino Fibra posizionato all’interno del primo Figlio (del primo Padre).
+
+Mappatura Figli con altri contenuti relativa al Padre “Offerta Valida fino al “
+
+Segue campo libero con testo dedicato.
+
+CAMPI TABELLA 2
+Titolo “Servizio/i e apparecchiature”, 4 Padri e 4 Figli (come da immagine). 
+
+
+CAMPI TABELLA 3
+Titolo “Velocità del servizio Internet e mezzi di ricorso”, 1 padre e 2 figli (come da immagine).
+
+Mappatura Figli con altri contenuti relativa al Padre “Velocità massima di connessione Internet “
+
+
+
+
+Dopo la tabella, segue nota relativa al Figlio per tecnologia FWA “ (1) “ e campo libero con testo dedicato.
+Immagine nota “ (1) “ e testo per campo libero: 
+
+
+CAMPI TABELLA 4
+Titolo “Prezzo” (resta al singolare perché viene indicato il prezzo dell’offerta mentre seguono poi le declinazioni delle varianti – convergenza, seconda linea, etc), 1 Padre e 3 Figli max (come da immagine). 
+
+Mappatura Figli con altri contenuti (i prezzi riportati in ciascun Figlio sono diversi tra offerte e mercato)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Segue campo libero con testo dedicato. Solo a titolo esemplificativo, alcune sintesi arrivano fino ad un testo di 629 parole.
+
+CAMPI TABELLA 5
+Titolo “Costi” (resta al plurale perché vengono indicati costi relativi ad oggetti differenti tra loro)
+3 Padri e 3 Figli, poi segue altra tabella con 2 Padre e 2 (come da immagine).
+
+Segue altra tabella con 1 Padre “Servizi inclusi nel costo mensile” e 7 Figli max, come da immagine.
+
+Possiamo accorpare il Padre “Servizi inclusi nel costo mensile” e relativi Figli, con la Tabella Costi; pertanto, quest’ultima diventerà Titolo “Costi” 4 Padri e 10 Figli, (come da immagine).
+
+
+CAMPI TABELLA 6
+Il Padre Servizi a pagamento non inclusi nel costo mensile avrà un proprio Titolo: “Servizi  non inclusi” con 1 Padri e 4 Figli.
+
+Segue Campo libero con nota esplicativa. 
+
+
+CAMPI TABELLA 7
+Titolo “Durata, rinnovo e risoluzione” con 4 Padri e 5 Figli.
+
+Mappatura Figli con altri contenuti 
+
+
+
+
+Segue Campo libero con info e sezioni con testo strutturato:
+
+
+
+FISSO CNS  CVM /Cross Selling 
+Mappatura dei campi nelle rispettive tabelle.
+
+CAMPI TABELLA 1 
+Nessun titolo, 3 Padri, 3 Figli (come da immagine) e 1 bollino Fibra posizionato all’interno del primo Figlio (del primo Padre).
+
+
+Segue campo libero con testo dedicato.
+
+
+CAMPI TABELLA 2 
+Titolo “Servizio/i e apparecchiature”, 4 Padri e 4 Figli (come da immagine). 
+
+
+
+CAMPI TABELLA 3 
+Titolo “Velocità del servizio Internet e mezzi di ricorso”, 1 padre e 2 figli (come da immagine).
+
+
+Dopo la tabella, segue nota relativa al Figlio per tecnologia FWA “ (1) “ e campo libero con testo dedicato.
+Immagine nota “ (1) “ e testo per campo libero
+
+
+CAMPI TABELLA 4  
+Titolo Prezzo, 1 padre e 1 figlio (come da immagine)
+
+Segue campo libero
+
+
+CAMPI TABELLA 5 
+Titolo “Costi” (resta al plurale perché vengono indicati costi relativi ad oggetti differenti tra loro)
+3 Padri e 3 Figli, poi segue altra tabella con 1 Padre e 3 figli (come da immagine).
+
+
+Possiamo accorpare il Padre “Servizi inclusi nel costo mensile” e relativi Figli, con la Tabella Costi; pertanto, quest’ultima diventerà Titolo “Costi” 4 Padri e 6 Figli, (come da immagine).
+
+
+
+CAMPI TABELLA 6 
+Il Padre Servizi a pagamento non inclusi nel costo mensile avrà un proprio Titolo: “Servizi non inclusi” con 1 Padri e 5 Figli.
+
+   Segue Campo libero con nota esplicativa. 
+
+
+CAMPI TABELLA 7 
+Titolo “Durata, rinnovo e risoluzione” con 4 Padri e 5 Figli.
+
+
+   Segue Campo libero con info e sezioni
+TABELLE MOBILE W3 GA MICROBUSINESS
+N.B Sotto le tabelle deve essere possibile inserire note riferite ai padri o figli e link. 
+N.B tutti i numeri di padri e figli sono da intendersi come numero massimo.
+
+CAMPI TABELLA 1: nessun titolo, 3 padri, 3 figli  
+
+
+
+CAMPI TABELLA 2: titolo Servizio/i e apparecchiature, 5 padri, 5 figli. Segue Campo libero con nota esplicativa, nota “1”.
+
+CAMPI TABELLA 3: titolo Daily Pass, 1 padre, 1 figlio. 
+
+
+CAMPI TABELLA 4: titolo Velocità del servizio Internet e mezzi di ricorso, 1 padre, 2 figli. Segue Campo libero con note esplicative, nota “2”.
+
+CAMPI TABELLA 5: titolo Prezzo, 4 padri, 7 figli. Segue Campo libero con note esplicative.
+
+CAMPI TABELLA 6: titolo Costo di attivazione servizio, 1 padre, 4 figli. Segue Campo libero con note esplicative, nota “3”.
+
+CAMPI TABELLA 7: nessun titolo, 2 padri, 5 figli
+
+
+CAMPI TABELLA 8: titolo Durata, rinnovo e risoluzione, 3 padri, 3 figli. Segue nota “4”
+
+
+seguono Campo liberi con testo strutturato.
+
+Per le Trasparenze
+Richiesto di suddividere il campo note in una parte fissa e in una parte variabile, quest'ultima compilata in base alle specificità dell’offerta (proposta lato mktg fisso)
+Quando un'offerta viene chiusa, è necessario produrre sia il PDF che l'Excel con lo stato 'chiuso' e la data di fine, mentre per la nuova offerta si genera un nuovo record con stato 'nuova' fino all'assegnazione del codice AGCOM. Il naming dei file deve essere coerente tra versione chiusa e nuova”
+Gli utenti vogliono sia i file (excel+pdf) quando non c'è ancora il codice di agcom sia la coppia (excel+pdf) quando è stato ricevuto il codice. Quindi, 4 file senza sovrascriverli
+CB MOB CNS si allinea al processo degli altri ossia verranno prodotti tutti gli output per ciascun punto prezzo, poi sceglierà doc con punto prezzo più alto. 
+
+Sia per Sintesi sia per Trasparenze, richiesto di inserire un campo specifico nell’interfaccia di input per determinare il nome del file. Lato VERY MOBILE, può andare bene l’inserimento del nome in autonomia da parte dell’utente, ma l’aggiunta automatica di un suffisso data_ora_min è ridondante e non necessario.
+
+*Vademecum AGCOM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

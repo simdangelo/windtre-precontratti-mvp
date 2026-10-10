@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Write standard, production-ready Python database models, including SQLAlchemy 2.0 declarative structures optimized for Google Cloud Spanner PostgreSQL dialect and Pydantic v2 schemas for request validation.",
+  "updatedAt": "2026-05-28T07:28:12.618109837Z"
+}

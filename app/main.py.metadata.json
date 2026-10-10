@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Write the main entrypoint module app/main.py to bootstrap the FastAPI application and mount the core API routes.",
+  "updatedAt": "2026-05-28T08:24:37.538846244Z"
+}

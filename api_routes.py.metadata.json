@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Write standard FastAPI API router endpoint definitions in Python, supporting relational bootstrap databases, custom boundary validators, and asynchronous compilation enqueues.",
+  "updatedAt": "2026-05-28T07:29:08.415161210Z"
+}

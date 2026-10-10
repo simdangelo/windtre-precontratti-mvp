@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Create a production-ready, security-hardened Dockerfile optimized for Google Cloud Run, containing headless LibreOffice libraries and corporate font packages needed for accessible PDF/UA exports.",
+  "updatedAt": "2026-05-28T07:31:35.479919768Z"
+}

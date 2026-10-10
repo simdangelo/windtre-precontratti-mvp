@@ -1,0 +1,56 @@
+{
+  "mcpServers": {
+    "sqlite-local-db": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sqlite",
+        "--db",
+        "/home/user/projects/pre_contratti/pre_contratti.db"
+      ],
+      "description": "Allows direct querying, auditing, and editing of SQLite schema and nested dynamic table JSON entries."
+    },
+    "gcs-storage-precontratti": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-gcs",
+        "--bucket",
+        "w3-precontratti-outputs",
+        "--templates-bucket",
+        "w3-precontratti-templates"
+      ],
+      "description": "Enables inspection, upload, and verification of master .docx/.xlsx templates and compiled PDF outputs in Google Cloud Storage."
+    },
+    "playwright-ui-tester": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-playwright"
+      ],
+      "description": "Powers headless browser automation, E2E functional testing, and segment-based role simulation on the admin panel dashboard."
+    },
+    "libreoffice-docker-sandbox": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-docker",
+        "--allow-volume-mount",
+        "/home/user/projects/pre_contratti:/workspace"
+      ],
+      "description": "Provides an execution sandbox with LibreOffice pre-installed to test and compile real Tagged PDF/UA files locally."
+    },
+    "gcp-cloud-logging": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-gcloud",
+        "--project-id",
+        "w3-precontratti-prod",
+        "--services",
+        "logging"
+      ],
+      "description": "Enables querying of GCP Cloud Logging entries to debug asynchronous document compilation workers and API router exceptions."
+    }
+  }
+}

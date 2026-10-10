@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Generate the complete PostgreSQL-dialect DDL database schema script optimized for Google Cloud Spanner, complete with foreign key structures, indices, dynamic JSON columns, and seed bootstrap data.",
+  "updatedAt": "2026-05-28T07:27:52.979306229Z"
+}
