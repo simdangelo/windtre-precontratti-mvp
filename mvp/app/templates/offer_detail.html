@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ asset_url('editor.css') }}">
+
+<div class="page-topbar">
+  <nav class="breadcrumb" aria-label="Percorso">
+    <a href="/">← Offerte</a>
+    <span class="sep">/</span>
+    <span class="current">{{ data.offer_name }}</span>
+  </nav>
+  <span class="legend muted">I campi con * sono obbligatori</span>
+</div>
+
+<div id="form-error" class="error-banner" hidden></div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Dati offerta</h2>
+    <div class="row-actions">
+      <span id="status-badge" class="tag status-{{ data.offer_status }}">{{ data.offer_status | upper }}</span>
+      <span id="agcom-badge" class="agcom-chip"{% if not data.agcom_code %} hidden{% endif %}>🏷️ {{ data.agcom_code or "" }}</span>
+    </div>
+  </div>
+  <div class="grid cols-3 offer-meta">
+    <div class="col-span-2">
+      <label for="offer-name">Nome offerta<span class="req">*</span></label>
+      <input type="text" id="offer-name" name="name" required aria-required="true"
+             maxlength="200" value="{{ data.offer_name }}">
+    </div>
+    <div>
+      <label for="technology-id">Tecnologia</label>
+      <div class="tech-row">
+        <select id="technology-id" name="technology_id">
+          <option value="">— Nessuna —</option>
+          {% for technology in technologies %}
+          <option value="{{ technology.id }}"
+                  data-download="{{ technology.max_download_mbps }}"
+                  data-upload="{{ technology.max_upload_mbps }}"
+                  data-badge="/technologies/{{ technology.id }}/badge"
+                  {% if technology.id == data.technology_id %}selected{% endif %}>{{ technology.name }}</option>
+          {% endfor %}
+        </select>
+        <img id="technology-badge" class="badge-img" alt="Bollino tecnologia" hidden>
+      </div>
+    </div>
+    <div>
+      <label>Categoria</label>
+      <div class="meta-value">{{ category.value | capitalize }}</div>
+    </div>
+    <div>
+      <label>Segmento</label>
+      <div class="meta-value">{{ segment_name }}</div>
+    </div>
+    <div>
+      <label>Ultima modifica</label>
+      <div class="meta-value" id="offer-updated-at">{{ updated_at.strftime('%d/%m/%Y %H:%M') }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Stato e codice AGCOM</h2>
+  </div>
+  <div class="grid cols-3">
+    <div>
+      <label for="offer-status">Stato offerta</label>
+      <select id="offer-status">
+        <option value="nuova" {% if data.offer_status == "nuova" %}selected{% endif %}>NUOVA (In redazione)</option>
+        <option value="aperta" {% if data.offer_status == "aperta" %}selected{% endif %}>APERTA (Attiva sul mercato)</option>
+        <option value="chiusa" {% if data.offer_status == "chiusa" %}selected{% endif %}>CHIUSA (Archiviata)</option>
+      </select>
+    </div>
+    <div>
+      <label for="agcom-code">Codice AGCOM</label>
+      <input type="text" id="agcom-code" maxlength="50" value="{{ data.agcom_code or '' }}"
+             placeholder="es. COD1234567 (vuoto = NUOVA)">
+    </div>
+    <div>
+      <label>Nota</label>
+      <p class="status-hint">Stato e codice AGCOM sono <b>liberi</b>: li gestisce
+        l'utente, senza vincoli automatici.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Tabelle fisse</h2>
+  </div>
+  <div id="fixed-fields">
+    {% for block_code, block_title, fields in data.fixed_groups %}
+    <section class="table-section" data-block="{{ block_code }}">
+      <h3>{{ block_title }}</h3>
+      <div class="field-rows">
+        {% for field in fields %}
+        <div class="field-row">
+          <label for="field-{{ field.key }}">{{ field.label }}</label>
+          {% if field.source_kind == "input" %}
+          <input type="text" id="field-{{ field.key }}" data-key="{{ field.key }}"
+                 value="{{ field.value_text }}" maxlength="500">
+          {% else %}
+          <input type="text" id="field-{{ field.key }}" data-key="{{ field.key }}"
+                 value="{{ field.value_text }}" maxlength="500" disabled>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Tabelle dinamiche</h2>
+  </div>
+  <div id="dynamic-tables">
+    {% for block in data.dynamic_blocks %}
+    {% set block_rows = data.rows | selectattr("block_code", "equalto", block.code) | list %}
+    <section class="table-section block-card {{ 'layout-1-col' if block.layout == '1_col' else 'layout-2-col' }}"
+             data-block="{{ block.code }}">
+      <div class="card-header">
+        <h3>{{ block.title }}</h3>
+        <div class="row-actions">
+          <button type="button" class="btn small secondary add-parent"
+                  data-block="{{ block.code }}">Aggiungi padre</button>
+          <button type="button" class="btn small secondary new-voce"
+                  data-block="{{ block.code }}">Nuova voce…</button>
+        </div>
+      </div>
+      <table>
+        <tbody data-block="{{ block.code }}">
+          {% if not block_rows %}
+          <tr class="empty-row"><td colspan="3">Nessuna voce in questa tabella. Usa "Aggiungi padre" per iniziare.</td></tr>
+          {% endif %}
+          {% for row in data.rows if row.block_code == block.code and row.parent_row_id is none %}
+          {% if not loop.first %}
+          <tr class="group-separator"><td colspan="3"></td></tr>
+          {% endif %}
+          <tr class="data-row parent-row" data-local-id="{{ row.id }}" data-parent-local-id=""
+              data-voce-id="{{ row.voce_id }}" data-block="{{ row.block_code }}">
+            <td>
+              <select class="voce-select">
+                {% for voce in data.voci[block.code] %}
+                <option value="{{ voce.id }}"
+                        {% if voce.id == row.voce_id %}selected{% endif %}>{{ voce.label }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td><input type="text" class="value-input" value="{{ row.value_text }}" maxlength="500"></td>
+            <td>
+              <div class="row-actions">
+              <button type="button" class="btn small secondary add-child">+ figlio</button>
+              <button type="button" class="btn small danger-ghost remove-row">×</button>
+              </div>
+            </td>
+          </tr>
+          {% for child in data.rows if child.parent_row_id == row.id %}
+          <tr class="data-row child-row" data-local-id="{{ child.id }}"
+              data-parent-local-id="{{ row.id }}" data-voce-id="{{ child.voce_id }}"
+              data-block="{{ child.block_code }}">
+            <td>
+              <select class="voce-select">
+                {% for voce in data.voci[block.code] %}
+                <option value="{{ voce.id }}"
+                        {% if voce.id == child.voce_id %}selected{% endif %}>{{ voce.label }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td><input type="text" class="value-input" value="{{ child.value_text }}"
+                       maxlength="500"></td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn small danger-ghost remove-row">×</button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Sintesi generata</h2>
+    {% if current_doc %}
+    <span class="tag {{ 'status-nuova' if sintesi_stale else 'status-aperta' }}">{{ 'Superata' if sintesi_stale else 'Aggiornata' }}</span>
+    {% endif %}
+  </div>
+  {% if current_doc %}
+  <p>
+    <a href="/documents/{{ current_doc.id }}/download">{{ current_doc.file_path.rsplit('/', 1)[-1] }}</a>
+    <span class="muted">· generata il {{ current_doc.generated_at.strftime('%d/%m/%Y %H:%M') }}</span>
+  </p>
+  {% if sintesi_stale %}
+  <p class="stale-warning">Ci sono modifiche successive alla generazione: rigenera la Sintesi per aggiornarla.</p>
+  {% endif %}
+  {% if previous_docs %}
+  <details class="history">
+    <summary>Versioni precedenti ({{ previous_docs|length }})</summary>
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Generata il</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for generated in previous_docs %}
+        <tr>
+          <td>
+            <a href="/documents/{{ generated.id }}/download">
+              {{ generated.file_path.rsplit('/', 1)[-1] }}
+            </a>
+          </td>
+          <td class="muted">{{ generated.generated_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+  {% endif %}
+  {% else %}
+  <p class="empty">Nessuna Sintesi generata.</p>
+  {% endif %}
+</div>
+
+<div class="save-bar">
+  <span id="save-status" class="muted" aria-live="polite"></span>
+  <div class="row-actions">
+    <button type="button" id="discard-btn" class="btn danger-ghost" hidden>Ripristina</button>
+    <button type="button" id="save-btn" class="btn" hidden>Applica Modifiche</button>
+    <button type="button" id="generate-btn" class="btn secondary">Genera Sintesi (.docx)</button>
+  </div>
+</div>
+
+<script type="application/json" id="sintesi-json">{{ sintesi_json | safe }}</script>
+<script>window.SINTESI_MODE = "edit";</script>
+<script>window.SINTESI_STALE = {{ 'true' if sintesi_stale else 'false' }};</script>
+<script src="{{ asset_url('modal.js') }}"></script>
+<script src="{{ asset_url('editor.js') }}"></script>
+{% endblock %}

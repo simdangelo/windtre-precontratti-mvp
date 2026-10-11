@@ -101,7 +101,13 @@ L'utente compila i valori (anche `ND`); non cambia etichette né struttura. Nei 
 Per una tabella dichiarata **dinamica** (es. Prezzo, Costi) il template definisce solo:
 
 - il **titolo** ("Tabella Prezzo");
-- il **layout**: 1 colonna (il figlio è già il valore: una riga di testo) oppure 2 colonne (etichetta | valore).
+- il **layout**: 1 colonna (etichetta e valore **incolonnati**: etichetta su una riga, valore sulla successiva) oppure 2 colonne (etichetta | valore sulla stessa riga). Il layout è deciso dal template (è presentazione del documento): **l'utente non lo cambia**.
+
+Le righe si definiscono per **struttura**, non per presenza di valore:
+
+- **Padre** = riga di primo livello (etichetta, di norma in grassetto) con valore proprio facoltativo e/o figli facoltativi;
+- **Figlio** = riga di secondo livello sotto un padre: è una **sottovoce** con etichetta e valore facoltativo;
+- **Valore** = attributo facoltativo di una riga (padre o figlio); non è una riga e non è un figlio.
 
 **Le voci non sono predefinite.** L'utente compone i gruppi padre→figli direttamente nel form. Perché questo non distrugga massive e note, ogni etichetta che l'utente sceglie o digita viene registrata in un **dizionario delle voci**:
 
@@ -187,7 +193,7 @@ Regole collegate:
 
 - **niente è obbligatorio** nelle tabelle dinamiche: la voce o c'è o non c'è, per scelta dell'utente;
 - una **riga-intestazione** (padre senza valore) serve a raggruppare i figli: di norma compare se almeno un figlio compare;
-- **solo tabelle a 2 colonne**: se un figlio viene creato con la **cella valore vuota** (nei campioni reali esistono, es. "Voce (non previsto se minuti illimitati)"), la proposta è **stamparlo così com'è** (etichetta + cella vuota): l'utente crea solo ciò che vuole vedere. [IPOTESI, da confermare] Nelle **tabelle a 1 colonna** il problema non esiste: il figlio è già il valore;
+- **solo tabelle a 2 colonne**: la **cella valore può restare vuota** (nei campioni reali esistono righe simili, es. "Voce (non previsto se minuti illimitati)"): la riga si stampa così come creata — è una scelta dell'utente. Nelle **tabelle a 1 colonna** il problema non esiste: il figlio è già il valore;
 - il confronto tra valori nelle massive è **per uguaglianza di stringa**: `2 euro` ≠ `2 €`.
 
 ---
@@ -277,7 +283,7 @@ Prima e dopo, sulla stessa offerta:
 Conseguenze da tenere a mente:
 
 1. **Tutte le voci sono facoltative**: non esistono righe obbligatorie nelle tabelle dinamiche; l'utente crea solo ciò che serve.
-2. **Più gruppi per tabella**: una tabella può avere più padri; possono esserci **solo padri** (con o senza valore), padri con figli, figli senza valore.
+2. **Più gruppi per tabella**: una tabella può avere più padri; possono esserci **solo padri** (con o senza valore), padri con figli, figli con o senza valore (nelle 2 colonne la cella valore vuota si stampa come creata).
 3. **1 o 2 colonne** è un layout della tabella (template): non cambia il modello dei dati.
 4. **Le etichette non si riscrivono a mano**: si scelgono dalla tendina o si creano come voce nuova. È questo che rende la voce riconoscibile per le massive (§8) e per le note (§7).
 5. **Nuova voce**: chi la crea la rende disponibile a tutti; da quel momento è una voce normale (massivabile, citabile nelle note). Per evitare doppioni il form suggerisce le voci simili già esistenti.
@@ -490,6 +496,7 @@ In parole povere:
 |---|---|
 | **Nuova voce** | È già parte della soluzione: "Nuova voce" la registra nel dizionario, nessuna modifica al database |
 | **Alias tra sinonimi** ("Rata Modem" ≈ "Rata del Modem") | Tabella di alias che punta alla stessa voce: le massive e le note riconoscono entrambe le scritture |
+| **Valori ricorrenti suggeriti** (tabelle a 1 colonna) | Elenco di valori suggeriti per voce/tabella + "valore personalizzato"; il valore resta una stringa in `value_text`. Opzionale in futuro l'identità del valore, per rinomine globali |
 | **Rinomina di una voce** | Si aggiorna l'etichetta nel dizionario: tutte le offerte che la usano cambiano insieme, i riferimenti restano validi (il codice non cambia) |
 | **Nuova tabella dinamica** | Un blocco `TABELLA_DINAMICA` (titolo + layout) nel template, con il suo dizionario. Nessuna modifica al database |
 | **Nuovo template** (Mobile, Very, variante di segmento) | Nuovo `document_template` + dizionario dedicato. Stesso codice |

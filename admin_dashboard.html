@@ -1741,7 +1741,7 @@
                     alert(`Procedura di compilazione PDF/UA avviata per "${offer.commercial_name}" sotto autorizzazione IAM.`);
                     const res = await fetch(`/api/offers/${id}/compile`, { method: 'POST' });
                     if (!res.ok) throw new Error("Errore durante la compilazione");
-                    alert(`Compilazione avviata. Documenti rigenerati correttamente per "${offer.commercial_name}".`);
+                    alert(`Compilazione avviata in background per "${offer.commercial_name}". Attendi qualche secondo, ricarica la pagina e usa i link di download.`);
                     await fetchOffers();
                 } catch (error) {
                     console.error("Errore di compilazione:", error);

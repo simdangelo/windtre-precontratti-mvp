@@ -1,3 +1,4 @@
+import html
 import os
 try:
     from dotenv import load_dotenv
@@ -250,14 +251,43 @@ def get_admin_portal():
 def download_compiled_file(filename: str):
     """
     Serves the compiled PDF, Word, or Excel document directly from the local compilation workspace.
-    Enables users to download and review real generated files in their browser.
+    Returns a clear 404 when the document has not been compiled yet. It never fabricates
+    placeholder files, which previously produced unopenable fake PDFs named '<file>.pdf'.
     """
-    file_path = os.path.join("/tmp/compilation_workspace", filename)
+    safe_name = os.path.basename(filename)
+    file_path = os.path.join("/tmp/compilation_workspace", safe_name)
+
+    def not_available_response(reason: str) -> HTMLResponse:
+        escaped_name = html.escape(safe_name, quote=True)
+        return HTMLResponse(
+            content=(
+                "<html><body style='font-family: sans-serif; padding: 40px;'>"
+                "<h1>Documento non disponibile</h1>"
+                f"<p>{reason}</p>"
+                "<p>Clicca su <strong>&#x1F504; Rigenera</strong> nell'elenco delle offerte "
+                "e riprova tra qualche secondo.</p>"
+                f"<p style='color:#888; font-size: 12px;'>"
+                f"File richiesto: <code>{escaped_name}</code></p>"
+                "</body></html>"
+            ),
+            status_code=404,
+        )
+
     if not os.path.exists(file_path):
-        # Fallback to create a mock file to prevent downloading failures in the demo
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(f"Mock compiled content for {filename}. (To view actual documents, please run in a LibreOffice-configured environment.)")
-    return FileResponse(file_path, filename=filename)
+        return not_available_response(
+            "Il documento non &egrave; stato ancora compilato "
+            "oppure la compilazione &egrave; fallita.",
+        )
+
+    if safe_name.lower().endswith(".pdf"):
+        with open(file_path, "rb") as f:
+            if f.read(5) != b"%PDF-":
+                return not_available_response(
+                    "Il file presente non &egrave; un PDF valido "
+                    "(compilazione incompleta o corrotta).",
+                )
+
+    return FileResponse(file_path, filename=safe_name)
 
 
 @app.get("/health", tags=["Health"])

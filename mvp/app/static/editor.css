@@ -1,0 +1,198 @@
+.offer-meta .meta-value { font-weight: 600; margin-top: 2px; }
+
+/* Spaziature comuni alle tabelle dinamiche (1 e 2 colonne):
+   cambiarle qui le cambia in entrambe. */
+:root {
+  --table-row-pad-y: 4px;         /* padding verticale delle righe padre */
+  --table-child-pad-y: 3px;       /* padding verticale delle righe figlio (più compatte) */
+  --table-row-gap: 6px;           /* spazio tra voce e valore nel layout a 1 colonna */
+  --table-child-row-gap: 4px;     /* idem per i figli, più compatto */
+  --table-group-sep: 16px;        /* altezza del separatore tra gruppi (divider al centro) */
+}
+
+/* Hover uniforme e simmetrico in entrambe le tabelle: la banda sta sulla
+   riga dati (mai sul separatore) e contiene i box con lo stesso margine
+   sopra e sotto; le righe figlio, più basse, hanno un hover più corto. */
+.table-section tbody tr:hover { background: none; }
+.table-section tbody tr.data-row:hover { background: var(--w3-gray-light); }
+
+/* Separatore tra gruppi padre: riga dedicata con il divider centrato. */
+.table-section tbody tr.group-separator td {
+  position: relative;
+  padding: 0;
+  height: var(--table-group-sep);
+  border: none;
+}
+.table-section tbody tr.group-separator td::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--w3-border);
+}
+
+.table-section + .table-section {
+  border-top: 1px solid var(--w3-border);
+  margin-top: 22px;
+  padding-top: 22px;
+}
+
+.table-section h3 { font-size: 20px; color: var(--w3-orange); margin-bottom: 14px; }
+.table-section .card-header h3 { margin: 0; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 38%) 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(58, 58, 69, .45);
+}
+
+.field-row:last-child { border-bottom: none; }
+.field-row label { margin-bottom: 0; }
+.field-row input:disabled { opacity: .6; cursor: not-allowed; }
+
+.block-card .card-header { margin-bottom: 12px; }
+#save-status { font-size: 13px; }
+#save-status.dirty { color: var(--w3-orange); font-weight: 600; font-style: italic; }
+
+.layout-hint { font-size: 12px; color: var(--w3-text-secondary); font-weight: 500; margin-left: 10px; }
+
+/* I controlli delle righe figlio sono più compatti di quelli dei padri:
+   la riga (e quindi il suo hover) risulta visibilmente più corta. */
+.table-section tr.child-row select,
+.table-section tr.child-row input {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 13px;
+}
+
+/* Tabelle a 2 colonne: voce e valore affiancati, azioni a destra. */
+.table-section.layout-2-col .data-row td:first-child { width: 40%; }
+.table-section.layout-2-col .data-row td:last-child {
+  width: 1%;
+  text-align: right;
+  white-space: nowrap;
+}
+.table-section.layout-2-col .data-row select.voce-select { min-width: 200px; }
+.table-section.layout-2-col tbody td {
+  padding: var(--table-row-pad-y) 10px;
+  border-bottom: none;
+}
+.table-section.layout-2-col tbody tr.child-row td {
+  padding-top: var(--table-child-pad-y);
+  padding-bottom: var(--table-child-pad-y);
+}
+.table-section.layout-2-col tbody tr.child-row:hover { background: none; }
+.table-section.layout-2-col tbody tr.child-row:hover td {
+  background-image: linear-gradient(var(--w3-gray-light), var(--w3-gray-light));
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 100% 100%;
+}
+.table-section.layout-2-col tbody tr.child-row:hover td:first-child {
+  background-position: 16px 0;
+  background-size: calc(100% - 16px) 100%;
+}
+.table-section.layout-2-col tr.child-row td:first-child {
+  position: relative;
+  padding-left: 34px;
+}
+.table-section.layout-2-col tr.child-row td:first-child::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--w3-border);
+}
+
+/* Tabelle a 1 colonna: voce sopra; valore e azioni sulla stessa riga.
+   Il divider è unico su tutto il gruppo padre; i figli sono collegati
+   al padre da una barretta verticale. */
+.table-section.layout-1-col table,
+.table-section.layout-1-col thead,
+.table-section.layout-1-col tbody,
+.table-section.layout-1-col tr,
+.table-section.layout-1-col td { display: block; width: auto; }
+.table-section.layout-1-col thead { display: none; }
+.table-section.layout-1-col .data-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 10px;
+  row-gap: var(--table-row-gap);
+  align-items: center;
+  padding: var(--table-row-pad-y) 10px;
+}
+.table-section.layout-1-col .data-row td { padding: 0; border-bottom: none; }
+.table-section.layout-1-col .data-row td:first-child { grid-column: 1 / -1; }
+.table-section.layout-1-col .data-row td:nth-child(2) { grid-column: 1; }
+.table-section.layout-1-col .data-row td:last-child { grid-column: 2; }
+.table-section.layout-1-col .data-row select.voce-select,
+.table-section.layout-1-col .data-row .value-input { width: 100%; }
+.table-section.layout-1-col tr.child-row {
+  position: relative;
+  row-gap: var(--table-child-row-gap);
+  padding-top: var(--table-child-pad-y);
+  padding-bottom: var(--table-child-pad-y);
+  padding-left: 34px;
+}
+.table-section.layout-1-col tr.child-row:hover {
+  background: none;
+  background-image: linear-gradient(var(--w3-gray-light), var(--w3-gray-light));
+  background-repeat: no-repeat;
+  background-position: 16px 0;
+  background-size: calc(100% - 16px) 100%;
+}
+.table-section.layout-1-col tr.child-row::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--w3-border);
+}
+
+.empty-row td {
+  color: var(--w3-text-secondary);
+  font-style: italic;
+  text-align: center;
+  padding: 18px 10px;
+  border-bottom: none;
+}
+
+.status-hint { font-size: 13px; color: var(--w3-text-secondary); margin-top: 8px; }
+
+.stale-warning { color: var(--w3-orange); font-weight: 600; margin: 6px 0 0; }
+
+.history { margin-top: 16px; }
+.history summary {
+  cursor: pointer;
+  color: var(--w3-text-secondary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.history summary:hover { color: var(--w3-text-primary); }
+
+.save-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--w3-gray-dark);
+  border: 1px solid var(--w3-border);
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-top: 8px;
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, .35);
+}
+
+.save-bar .btn[disabled] { opacity: .45; cursor: not-allowed; filter: none; }

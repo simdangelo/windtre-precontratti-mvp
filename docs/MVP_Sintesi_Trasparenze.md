@@ -142,9 +142,10 @@ Tutto ciò che segue è escluso dal primo rilascio ma **non deve essere precluso
 | **Template** | File Word/Excel + **definizioni** (blocchi, campi fissi, tabelle fisse e dinamiche, dizionario delle voci) che lo descrivono (§6.4). Identificato da un codice e da una versione. |
 | **Blocco** | Unità del template: intestazione, **tabella fissa**, **tabella dinamica** o testo. Contiene campi e note. |
 | **Campo** | Slot **fisso** dichiarato nel template, con **chiave stabile** (`key`), etichetta, tipo e posizione. Nella Sintesi corrisponde a un merge field. |
-| **Voce** (padre/figlio) | Riga di una **tabella dinamica**, composta dall'utente: il padre è la riga principale (con o senza valore), i figli sono le sotto-righe. Ogni voce punta a un'etichetta del dizionario. |
+| **Padre** | Riga di primo livello di una tabella dinamica: etichetta dal dizionario (di norma in grassetto), con **valore proprio facoltativo** e/o **figli facoltativi**. |
+| **Figlio** | Riga di secondo livello, sotto un padre: è una **sottovoce**, con etichetta dal dizionario e **valore facoltativo** (in pratica quasi sempre presente). Il figlio è definito dalla posizione, non dal valore: **un valore non è un figlio**. |
 | **Voce del dizionario** | Etichetta registrata una volta (scelta dalla tendina o creata con "Nuova voce"): è l'identità condivisa che massive e note usano per riconoscere "la stessa voce" tra offerte. **Nelle tabelle dinamiche nessuna voce è obbligatoria** [DECISO, §6.5]. |
-| **Valore** | La stringa scritta dall'utente per un campo fisso o per una voce (es. `27,99 euro`). Per la Sintesi è testo così com'è; per la Trasparenza è un valore nel formato atteso dall'Excel. |
+| **Valore** | Attributo **facoltativo** di una riga (padre o figlio) o di un campo fisso (es. `27,99 euro`). Non è una riga e non è un figlio. Per la Sintesi è testo così com'è; per la Trasparenza è un valore nel formato atteso dall'Excel. |
 | **Nota statica** | Testo del template senza valori variabili. |
 | **Nota dinamica** | Testo del template che contiene **riferimenti (chip)** a voci o campi fissi (es. `{{voce:costo_canone_servizio}}`): vengono risolti alla generazione, quindi la nota si aggiorna da sola quando il valore cambia. |
 | **Azione massiva** | Operazione che applica lo stesso valore a un campo fisso o a una voce, su un gruppo di offerte selezionate, con anteprima e conferma. Solo Sintesi. [DECISO D2] |
@@ -178,7 +179,7 @@ Punti chiave:
 2. **I dati operativi non sono JSON.** I valori sono righe relazionali: campi fissi `(documento, campo, valore)` e righe dinamiche `(documento, voce, padre/figlio, valore)`: è ciò che rende possibile referenziare una voce per le azioni massive (§6).
 3. Il **JSON resta solo per informazioni di servizio**: criteri di selezione di un'azione massiva, eventuali snapshot storici, `render_context` congelato. Mai per i valori editabili.
 
-**Stack e vincoli ereditati** [EREDITATO da INQUADRAMENTO/Bozze/CODICE]: Cloud Spanner (dialetto PostgreSQL), applicazione FastAPI + SQLAlchemy 2.0 + Pydantic v2, chiavi `UUIDv4` generate dall'applicazione (mai auto-incrementi, mai estensioni PostgreSQL-specifiche), file su Cloud Storage, identità aziendale OIDC, SQLite per i test locali. Rendering documenti: libreria di template DOCX con merge field e cicli (es. `docxtpl`) e `openpyxl` per l'Excel. Frontend: da decidere se evolvere la dashboard esistente o fare una SPA separata [APERTO, §11].
+**Stack e vincoli ereditati** [EREDITATO da INQUADRAMENTO/Bozze/CODICE]: Cloud Spanner (dialetto PostgreSQL), applicazione FastAPI + SQLAlchemy 2.0 + Pydantic v2, chiavi `UUIDv4` generate dall'applicazione (mai auto-incrementi, mai estensioni PostgreSQL-specifiche), file su Cloud Storage, identità aziendale OIDC, SQLite per i test locali. Rendering documenti: **`docxtpl`** (Jinja2 sopra `python-docx`) per la Sintesi, **`openpyxl`** per la Trasparenza, `python-docx` per ritocchi puntuali — struttura dei template descritta in **Appendice C**. Frontend: da decidere se evolvere la dashboard esistente o fare una SPA separata [APERTO, §11].
 
 Queste scelte non condizionano il modello: la soluzione di §6 funziona identica su Spanner, PostgreSQL o SQLite.
 
@@ -223,7 +224,7 @@ La soluzione **C** nasce dalle bozze v0.2 (`docs/new/`) ed è stata adattata all
 **L'identità sta fuori dal documento: nel template per i campi fissi, nel dizionario per le voci.**
 
 1. **Campi fissi.** Intestazione, tabelle fisse e testi sono definiti nel template: `key` stabile, etichetta, origine, obbligo (per i controlli di generazione), cella Excel per la Trasparenza. Nei blocchi fissi i valori vanno compilati (anche `ND`) e la generazione segnala i mancanti.
-2. **Tabelle dinamiche.** Il template definisce solo **titolo** e **layout** (1 o 2 colonne). Le voci (padri e figli) sono **composte dall'utente** nel form: "Aggiungi padre" / "Aggiungi figlio", etichetta scelta dalla **tendina delle voci note** oppure creata con **"Nuova voce"**; valore facoltativo. **Nessuna voce è obbligatoria.**
+2. **Tabelle dinamiche.** Il template definisce solo **titolo** e **layout** (1 o 2 colonne; il layout è presentazione del documento e **l'utente non lo cambia**). Le voci (padri e figli) sono **composte dall'utente** nel form: "Aggiungi padre" / "Aggiungi figlio", etichetta scelta dalla **tendina delle voci note** oppure creata con **"Nuova voce"**; valore facoltativo. **Nessuna voce è obbligatoria.**
 3. **Dizionario delle voci.** Ogni etichetta usata è registrata una volta (`voce`: id, code, label): è l'**identità condivisa** che permette di riconoscere "la stessa voce" in offerte diverse. Una voce nuova entra nel dizionario e da lì è normale: compare nella tendina per tutti, è massivabile e citabile nelle note. Per l'MVP il **seed iniziale** è provvisorio, definito a tavolino; il censimento reale verrà dopo.
 4. **Righe relazionali.** I dati delle tabelle dinamiche sono righe `offer_row` (documento, tabella, padre/figlio, voce, valore, ordine). Una voce non inserita **non ha riga**: l'assenza è esplicita e distinguibile da qualunque valore, incluso `ND`.
 5. **Le azioni massive operano sulla voce** (o sul campo fisso): "imposta la voce `Costo SIM` = `12 euro` per le offerte selezionate". Per ogni offerta si ha un esito certo:
@@ -256,7 +257,7 @@ L'anteprima è un conteggio esatto, non una stima. L'applicazione aggiorna o cre
 
 - **"Aggiungi padre"** apre una riga di primo livello: l'etichetta si sceglie dalla **tendina** delle voci note o si crea con **"Nuova voce"**; il valore è facoltativo (vuoto = riga-intestazione);
 - **"Aggiungi figlio"** sotto un padre: stessa logica, quanti figli servono;
-- una tabella può avere più gruppi padre/figli; possono esserci **solo padri** (con o senza valore), padri con figli, figli senza valore;
+- una tabella può avere più gruppi padre/figli; possono esserci **solo padri** (con o senza valore), padri con figli, figli con o senza valore. Un **figlio è una sottovoce** (una riga sotto un padre), non un valore;
 - **nessuna voce è obbligatoria**: si crea solo ciò che serve all'offerta;
 - le etichette **non si scrivono fuori dal dizionario**: scegliere o creare una voce è ciò che la rende riconoscibile per massive e note;
 - l'ordine delle righe è quello di inserimento.
@@ -599,7 +600,7 @@ erDiagram
    - per la Trasparenza i valori mappati sulle celle `excel_cell`;
    - i derivati risolti (`offer.name`, tecnologia → bollino/velocità);
    - le note con i riferimenti (chip) risolti.
-3. Regole di stampa [EREDITATO/IPOTESI]: `ND` → `Non applicabile`; una riga creata si stampa (l'utente crea solo ciò che deve comparire); padre senza valore = riga-intestazione seguita dai figli; per non stampare una voce basta non crearla; nota stampata sotto il proprio blocco, con numerazione generata. [APERTO, solo tabelle a 2 colonne: figli con cella valore vuota, §11]
+3. Regole di stampa [EREDITATO/IPOTESI]: `ND` → `Non applicabile`; una riga creata si stampa (l'utente crea solo ciò che deve comparire); padre senza valore = riga-intestazione seguita dai figli; per non stampare una voce basta non crearla; nota stampata sotto il proprio blocco, con numerazione generata. La **cella valore può restare vuota** (tabelle a 2 colonne): la riga si stampa così come creata — è una scelta dell'utente.
 4. Controlli prima del rendering [IPOTESI]: campi fissi mancanti o riferimenti di note irrisolti → **generazione bloccata** con messaggio puntuale (offerta, blocco, voce).
 5. Rendering: DOCX dal template Word con i merge field; XLSX dal template Excel con scrittura delle celle.
 6. Salvataggio del file su storage; riga in `generated_document` (`is_current`); evento `GENERATE` nel registro. I file precedenti restano.
@@ -641,6 +642,7 @@ erDiagram
 
 - **Nuova voce in una tabella dinamica**: è già il funzionamento normale ("Nuova voce" nel form); se serve una voce nuova per tutti, la si crea una volta e resta nel dizionario.
 - **Alias tra sinonimi** ("Rata Modem" ≈ "Rata del Modem"): tabella di alias che punta alla stessa voce; massive e note riconoscono entrambe le scritture. [FUORI MVP]
+- **Valori ricorrenti suggeriti** (soprattutto per le tabelle a 1 colonna): per una voce o una tabella si definisce un elenco di valori suggeriti (es. "Illimitato", "Nessun vincolo") e il form propone elenco + "valore personalizzato". Il modello non cambia: il valore resta la stringa in `value_text`. Se in futuro si vorrà rinominare un valore ricorrente per tutte le offerte insieme, gli si darà un'identità (`valore_ricorrente`) e le righe la referenzieranno. [FUORI MVP]
 - **Nuova tabella dinamica**: nuovo `template_block` (kind `TABELLA_DINAMICA`, layout) + ciclo nel template Word; il dizionario nasce vuoto e cresce con l'uso. Nessuna alterazione del database.
 - **Nuovo campo fisso o nuova tabella fissa**: nuovo `template_field` + merge field nel template. Nessuna alterazione del database.
 - **Nuovo template di categoria** (Mobile, Very, o variante di segmento): nuovo `document_template` + definizioni complete. Stesso codice.
@@ -678,7 +680,24 @@ Poiché **entrambi** i ground truth hanno elementi con identità stabili (campi 
 10. **Categoria dell'Etnico.** Oggi è elencato tra i gruppi; va assegnato alla categoria Mobile o a una propria?
 11. **Frontend.** Si parte evolvendo la dashboard esistente o con una SPA separata? Non cambia il modello dati.
 12. **Manutenzione template ↔ definizioni.** Nell'MVP campi fissi e voci sono mantenuti dagli sviluppatori insieme al template; prevediamo un controllo automatico che verifichi che ogni chiave dei campi fissi e ogni codice voce esistano come merge field nel file (e viceversa), per evitare derive.
-13. **Figli con cella valore vuota (solo tabelle a 2 colonne).** Se un figlio viene creato senza valore (negli esempi reali esistono righe così, es. "Voce (non previsto se minuti illimitati)"), la proposta è **stamparlo così com'è** (etichetta + cella vuota): l'utente crea solo ciò che vuole vedere. Nelle tabelle a **1 colonna** il problema non esiste: il figlio è già il valore. Confermare la proposta.
+
+---
+
+## 12. Prerequisiti e decisioni per iniziare l'MVP
+
+**Da chiudere prima di scrivere codice (bloccanti):**
+
+1. **Unità offerta** — confermare il modello adottato: `offer` (nome univoco) + due documenti indipendenti (Sintesi, Trasparenza) [§11.1].
+2. **Tecnologia sull'offerta** — confermare che è un attributo dell'offerta (serve per bollino, velocità, massive) [§11.3].
+3. **Template Fisse di riferimento** — **[FATTO, per i test]** creato `templates/sintesi_fisse_template.docx` (generato da `scripts/build_sintesi_template.py`): solo intestazione/bullet, tabelle intro, servizi, velocità e durata (statiche, valori a merge field) e tabelle Prezzo (2 colonne) e Costi (1 colonna) dinamiche; note e sezioni ulteriori rimosse. Il seed del dizionario resta provvisorio (inventato a tavolino). Vedi Appendice C.
+4. **Stack di sviluppo** — Spanner è obbligatorio già ora oppure si sviluppa su SQLite/Cloud SQL e si migra dopo? Non cambia il modello (domanda 1.1 di `DOMANDE_COMMITTENTE`).
+5. **Frontend** — evolvere `admin_dashboard.html` (più rapido per l'MVP) o partire da una SPA separata? [§11.11].
+
+**Rinviabili (non bloccano l'MVP):**
+
+- PDF e PDF/UA; ciclo di vita AGCOM (stati, codice, 4 file); naming file/Adobe; permessi trasversali ed enforcement; storico completo (basta il registro minimo); cluster; RDA e parametri globali; alias tra sinonimi; valori ricorrenti; note per offerta; categoria dell'Etnico; migrazione/censimento; tabelle ripetute (si modellano come blocchi distinti quando servono).
+
+**Ordine di sviluppo consigliato:** Trasparenza per prima (griglia fissa: percorso completo più semplice), poi la Sintesi (campi fissi → tabelle dinamiche → massive → note), infine storico e rifiniture.
 
 ---
 
@@ -755,3 +774,37 @@ Righe dinamiche (`offer_row`):
 - **Render context**: struttura di dati costruita alla generazione e passata al template.
 - **ND**: valore convenzionale che in output diventa "Non applicabile"; diverso dalla voce non compilata (che non compare).
 - **Punto prezzo**: variante di prezzo di un'offerta (terminologia dei documenti precedenti). **Non modellato nell'MVP** [DECISO D3].
+
+---
+
+## Appendice C — I template Word: merge field e tabelle dinamiche
+
+**Libreria scelta: `docxtpl`** (Jinja2 sopra `python-docx`). Motivi: merge field nominati, cicli dentro le righe di tabella, immagini inline (bollini), filtri di formattazione. `python-docx` da solo richiederebbe di duplicare a mano le righe XML: più codice e più fragilità; resta utile per ritocchi puntuali.
+
+**Contratto di sintassi**
+
+- **campo fisso**: `{{ campo.<key> }}` — es. `{{ campo.disponibilita }}`;
+- **tabella dinamica a 2 colonne**: una **riga-ciclo**:
+
+  | riga | cella 1 | cella 2 |
+  |---|---|---|
+  | 1 | `{%tr for r in prezzo.righe %}` | |
+  | 2 | `{{r r.etichetta }}` | `{{ r.valore }}` |
+  | 3 | `{%tr endfor %}` | |
+
+  Le righe 1 e 3 contengono solo i tag e vengono **rimosse** alla resa: resta la riga 2 ripetuta una volta per ogni riga della tabella.
+
+- **tabella dinamica a 1 colonna**: identica, con una sola cella e `{{r r.testo }}`;
+- **grassetto dei padri**: si ottiene passando `RichText(..., bold=True)` per l'etichetta/testo. Per le variabili `RichText` la sintassi è **`{{r <var> }}`** (la `r` dopo le graffe è obbligatoria: senza, l'XML della formattazione finisce dentro la cella come testo);
+- **bollino**: al posto dell'immagine un merge field (`{{ campo.bollino }}`) riempito con un `InlineImage`;
+- **note**: paragrafi del template; i chip diventano `{{ voce.<code> }}` (o `{{ campo.<key> }}`).
+
+**Regola d'oro: il renderer appiattisce l'albero in righe fisiche.** Il servizio di generazione trasforma l'albero padre→figli nell'**elenco ordinato delle righe così come devono apparire** (padre, valore del padre, figli, loro valori, righe senza valore...) e per ciascuna prepara etichetta e valore. Il template ha quindi **un solo ciclo**, i figli si alternano correttamente ai padri e il grassetto del padre si ottiene con `RichText` (stesso posto nel template; il testo formattato è deciso da Python).
+
+Altre regole operative:
+
+- **tabella senza righe** → non deve comparire: il post-processing (o una condizione Jinja) rimuove la tabella vuota;
+- **controlli**: a ogni generazione, ogni `key`/`code` usato nel template deve esistere nelle definizioni e viceversa; docxtpl espone `get_undeclared_template_variables()` per l'elenco delle variabili non dichiarate;
+- **accortezza**: i tag non devono essere spezzati dalla formattazione di Word (scriverli con lo stesso stile; non ritoccare il testo dei tag).
+
+**Template di test dell'MVP**: `templates/sintesi_fisse_template.docx`, generato da `scripts/build_sintesi_template.py` partendo da `docs/SuperInternetCasa5G-FWAIndoor-20,99-CambioTecnologia-28102025.docx`. Contiene solo: intestazione e bullet, tabella intro, Servizio/i e apparecchiature, Velocità (statiche, con i valori a merge field), Prezzo (dinamica, 2 colonne), Costi (dinamica, 1 colonna), Durata, rinnovo e risoluzione (statica). Note e sezioni ulteriori rimosse. Cicli verificati con un render di prova (grassetto dei padri incluso).

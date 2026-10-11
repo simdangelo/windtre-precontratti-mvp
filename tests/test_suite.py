@@ -1172,6 +1172,80 @@ def test_duplicated_offer_agcom_code_flow():
         db.close()
 
 
+def test_download_missing_compiled_file_returns_404():
+    """
+    Regression: /downloads must NOT fabricate a fake .pdf when the compiled
+    document is missing. Previously it wrote plain-text "mock" content with a
+    .pdf extension, producing a file that no PDF reader could open.
+    """
+    import uuid
+
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    client = TestClient(app)
+    missing_name = f"Documento_Mai_Compilato_{uuid.uuid4().hex}.pdf"
+    res = client.get(f"/downloads/{missing_name}")
+    assert res.status_code == 404
+
+
+def test_download_rejects_non_pdf_content():
+    """
+    Regression: a file with a .pdf extension but non-PDF content (such as the
+    legacy mock text files already present in the workspace) must not be
+    served as a valid document.
+    """
+    import uuid
+
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    workspace = "/tmp/compilation_workspace"
+    os.makedirs(workspace, exist_ok=True)
+    fake_name = f"Test_Fake_Corrotto_{uuid.uuid4().hex}.pdf"
+    fake_path = os.path.join(workspace, fake_name)
+    with open(fake_path, "w", encoding="utf-8") as f:
+        f.write("Mock compiled content for a document that was never compiled.")
+
+    try:
+        client = TestClient(app)
+        res = client.get(f"/downloads/{fake_name}")
+        assert res.status_code == 404
+    finally:
+        os.remove(fake_path)
+
+
+def test_compile_sintesi_pdf_libreoffice_fallback(tmp_path, monkeypatch):
+    """
+    Regression: without Microsoft Graph credentials, compile_sintesi_pdf must
+    fall back to the local headless LibreOffice engine and produce a real PDF
+    (starting with the %PDF- magic bytes) instead of raising immediately.
+    """
+    for var in (
+        "MS_GRAPH_TENANT_ID", "MS_GRAPH_CLIENT_ID", "MS_GRAPH_CLIENT_SECRET", "MS_GRAPH_DRIVE_ID",
+        "ONEDRIVE_TENANT_ID", "ONEDRIVE_CLIENT_ID", "ONEDRIVE_CLIENT_SECRET",
+        "ONEDRIVE_DRIVE_ID", "ONEDRIVE_USER_ID",
+    ):
+        monkeypatch.delenv(var, raising=False)
+
+    from docx import Document
+
+    from app.document_generator import compile_sintesi_pdf
+
+    docx_path = tmp_path / "Sintesi_Test_Fallback.docx"
+    doc = Document()
+    doc.add_heading("Sintesi Test", level=1)
+    doc.add_paragraph("Contenuto di prova per il fallback LibreOffice.")
+    doc.save(str(docx_path))
+
+    pdf_path = compile_sintesi_pdf(str(docx_path), str(tmp_path))
+    assert os.path.exists(pdf_path)
+    with open(pdf_path, "rb") as f:
+        assert f.read(5) == b"%PDF-"
+
+
 
 
 

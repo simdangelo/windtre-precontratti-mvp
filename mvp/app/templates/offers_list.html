@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2>Offerte</h2>
+    <a class="btn" href="/offers/new">Nuova offerta</a>
+  </div>
+
+  {% if overviews %}
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Stato</th>
+        <th>Codice AGCOM</th>
+        <th>Categoria</th>
+        <th>Tecnologia</th>
+        <th>Ultima modifica</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for overview in overviews %}
+      <tr>
+        <td>
+          <a href="/offers/{{ overview.offer.id }}">{{ overview.offer.name }}</a>
+        </td>
+        <td>
+          <span class="tag status-{{ overview.offer.status.value }}">{{ overview.offer.status.value | upper }}</span>
+        </td>
+        <td>
+          {% if overview.offer.agcom_code %}
+          <span class="agcom-chip">🏷️ {{ overview.offer.agcom_code }}</span>
+          {% else %}
+          <span class="agcom-chip empty">Senza codice AGCOM</span>
+          {% endif %}
+        </td>
+        <td>{{ overview.offer.category.value | capitalize }}</td>
+        <td>
+          {% if overview.technology %}
+          <img class="badge-img" src="/technologies/{{ overview.technology.id }}/badge"
+               alt="Bollino {{ overview.technology.name }}" title="{{ overview.technology.name }}">
+          {% else %}
+          <span class="muted">—</span>
+          {% endif %}
+        </td>
+        <td class="muted">{{ overview.offer.updated_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>
+          <div class="row-actions">
+            {% if not overview.has_sintesi %}
+            <form method="post" action="/offers/{{ overview.offer.id }}/sintesi">
+              <button type="submit" class="btn small">Crea Sintesi</button>
+            </form>
+            {% endif %}
+            <button type="button" class="btn small secondary duplicate-offer"
+                    data-offer-id="{{ overview.offer.id }}"
+                    data-offer-name="{{ overview.offer.name }}">Duplica</button>
+            <button type="button" class="btn small danger-ghost delete-offer"
+                    data-offer-id="{{ overview.offer.id }}"
+                    data-offer-name="{{ overview.offer.name }}">Elimina</button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Nessuna offerta. Creane una.</p>
+  {% endif %}
+</div>
+
+<script src="{{ asset_url('modal.js') }}"></script>
+<script src="{{ asset_url('offers_list.js') }}"></script>
+{% endblock %}

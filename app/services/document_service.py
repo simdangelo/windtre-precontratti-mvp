@@ -1,5 +1,6 @@
 import io
 import os
+import traceback
 from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Dict, Any, Optional
@@ -245,6 +246,20 @@ class DocumentService:
 
     @staticmethod
     def execute_asynchronous_document_compilation(offer_id: UUID, db: Session) -> None:
+        """
+        Wrapper around the compilation worker. Catches any failure and logs the full
+        traceback to the server console, so broken generations are no longer silent,
+        then re-raises to preserve the original error semantics.
+        """
+        try:
+            DocumentService._compile_documents_worker(offer_id, db)
+        except Exception:
+            print(f"Document compilation FAILED for offer {offer_id}:")
+            traceback.print_exc()
+            raise
+
+    @staticmethod
+    def _compile_documents_worker(offer_id: UUID, db: Session) -> None:
         """
         Worker task to compile dynamic files, execute LibreOffice PDF exports,
         verify file sizes, and record audit histories inside Google Cloud Spanner.

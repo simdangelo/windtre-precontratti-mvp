@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ asset_url('editor.css') }}">
+<style>
+  .bulk-check { width: auto; }
+  .offers-scroll { max-height: 360px; overflow-y: auto; }
+  .esito-da_modificare { color: var(--w3-yellow); font-weight: 600; }
+  .esito-invariata, .esito-saltata_assente { color: var(--w3-text-secondary); }
+  .esito-applicata { color: var(--w3-green); font-weight: 600; }
+  .counts { font-weight: 600; margin-bottom: 12px; }
+  .counts span { color: var(--w3-orange); }
+  #result { margin-top: 12px; font-size: 13px; }
+  #result.stale { color: var(--w3-orange); font-weight: 600; }
+
+  .group-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--w3-text-secondary);
+    margin: 18px 0 10px;
+  }
+
+  .group-hint {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: italic;
+    text-align: right;
+  }
+
+  .group-divider {
+    border-top: 1px solid var(--w3-border);
+    margin: 24px 0 0;
+    padding-top: 20px;
+  }
+
+  .spinner-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0, 0, 0, .55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid var(--w3-border);
+    border-top-color: var(--w3-orange);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<div class="card">
+  <div class="card-header">
+    <h2>1. Offerte</h2>
+    <span class="muted" id="offers-count"></span>
+  </div>
+  {% if offers %}
+  <div class="offers-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">
+            <input type="checkbox" id="select-all" class="bulk-check" checked>
+          </th>
+          <th>Nome</th>
+          <th>Categoria</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for offer in offers %}
+        <tr>
+          <td>
+            <input type="checkbox" class="bulk-check offer-check" value="{{ offer.id }}" checked>
+          </td>
+          <td>{{ offer.name }}</td>
+          <td class="muted">{{ offer.category.value | capitalize }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">Nessuna offerta. Creane una.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>2. Cosa modificare</h2>
+    <span class="muted legend">Compila solo i valori che vuoi cambiare: i campi vuoti non vengono toccati</span>
+  </div>
+
+  <h4 class="group-heading">Tabelle fisse</h4>
+  <section class="table-section" data-block="dati-offerta">
+    <h3>Dati offerta</h3>
+    <div class="field-rows">
+      <div class="field-row">
+        <label for="bulk-technology">Tecnologia</label>
+        <select id="bulk-technology">
+          <option value="">Non modificare</option>
+          {% for technology in technologies %}
+          <option value="{{ technology.id }}"
+                  data-download="{{ technology.max_download_mbps }}"
+                  data-upload="{{ technology.max_upload_mbps }}">{{ technology.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </section>
+  <div id="bulk-fixed">
+    {% for block_code, block_title, fields in data.fixed_groups %}
+    <section class="table-section" data-block="{{ block_code }}">
+      <h3>{{ block_title }}</h3>
+      <div class="field-rows">
+        {% for field in fields %}
+        <div class="field-row">
+          <label for="bulk-field-{{ field.key }}">{{ field.label }}</label>
+          {% if field.source_kind == "input" %}
+          <input type="text" id="bulk-field-{{ field.key }}" class="bulk-field"
+                 data-key="{{ field.key }}" maxlength="500" placeholder="Non modificare">
+          {% else %}
+          <input type="text" id="bulk-field-{{ field.key }}" class="bulk-derived"
+                 data-key="{{ field.key }}" value="" disabled>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+
+  <div class="group-divider"></div>
+  <h4 class="group-heading">Tabelle dinamiche<span class="group-hint">I valori delle tabelle dinamiche si applicano solo alle offerte che li hanno già: dove mancano, l'offerta viene saltata.</span></h4>
+  {% for block in data.dynamic_blocks %}
+  <section class="table-section" data-block="{{ block.code }}">
+    <h3>{{ block.title }}<span class="layout-hint">{{ 'Tabella a 1 colonna' if block.layout == '1_col' else 'Tabella a 2 colonne' }}</span></h3>
+    <div class="field-rows">
+      {% for voce in data.voci[block.code] %}
+      <div class="field-row">
+        <label for="voce-{{ voce.id }}">{{ voce.label }}</label>
+        <input type="text" id="voce-{{ voce.id }}" class="bulk-voce"
+               data-voce-id="{{ voce.id }}" maxlength="500" placeholder="Non modificare">
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+
+<div class="save-bar">
+  <span id="result" class="muted" aria-live="polite"></span>
+  <div class="row-actions">
+    <button type="button" id="preview-btn" class="btn">Anteprima</button>
+  </div>
+</div>
+
+<div class="card" id="preview-card" style="display:none">
+  <div class="card-header">
+    <h2>Esito (anteprima)</h2>
+    <button type="button" id="apply-btn" class="btn">Applica</button>
+  </div>
+  <div class="counts" id="preview-counts"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Offerta</th>
+        <th>Esito</th>
+        <th>Riepilogo</th>
+      </tr>
+    </thead>
+    <tbody id="preview-body"></tbody>
+  </table>
+</div>
+
+<div id="apply-spinner" class="spinner-overlay" hidden>
+  <div class="spinner"></div>
+  <p>Applicazione in corso…</p>
+</div>
+
+<script src="{{ asset_url('modal.js') }}"></script>
+<script>
+(function () {
+  "use strict";
+
+  const OUTCOME_LABELS = {
+    da_modificare: "Da modificare",
+    invariata: "Invariata",
+    saltata_assente: "Saltata (voci assenti)",
+    applicata: "Applicata"
+  };
+
+  const COUNT_LABELS = {
+    offerte_modificate: "Offerte modificate",
+    offerte_invariate: "Offerte invariate",
+    offerte_saltate: "Offerte saltate",
+    valori_modificati: "Valori modificati",
+    voci_saltate: "Voci saltate (assenti)"
+  };
+
+  const resultEl = document.getElementById("result");
+  const previewCard = document.getElementById("preview-card");
+  const previewCounts = document.getElementById("preview-counts");
+  const previewBody = document.getElementById("preview-body");
+  const previewBtn = document.getElementById("preview-btn");
+  const applyBtn = document.getElementById("apply-btn");
+  const selectAll = document.getElementById("select-all");
+  const offersCount = document.getElementById("offers-count");
+  const spinnerOverlay = document.getElementById("apply-spinner");
+  let operationId = null;
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) { node.className = className; }
+    if (text !== undefined) { node.textContent = text; }
+    return node;
+  }
+
+  function setResult(message, isError) {
+    resultEl.textContent = message;
+    resultEl.className = isError ? "error" : "muted";
+  }
+
+  function setStaleMessage(message) {
+    resultEl.textContent = message;
+    resultEl.className = message ? "stale" : "muted";
+  }
+
+  function resetPreview(message) {
+    operationId = null;
+    previewCard.style.display = "none";
+    previewBody.textContent = "";
+    previewCounts.textContent = "";
+    applyBtn.disabled = false;
+    setStaleMessage(message || "");
+  }
+
+  function markPreviewStale() {
+    if (operationId) {
+      resetPreview("Modifiche cambiate: clicca di nuovo Anteprima.");
+    }
+  }
+
+  function formatCounts(counts) {
+    return Object.keys(counts).map(function (key) {
+      return (COUNT_LABELS[key] || key) + ": " + counts[key];
+    }).join(" · ");
+  }
+
+  function selectedOfferIds() {
+    return Array.prototype.map.call(
+      document.querySelectorAll("input.offer-check:checked"),
+      function (checkbox) { return checkbox.value; }
+    );
+  }
+
+  function updateOffersCount() {
+    const total = document.querySelectorAll("input.offer-check").length;
+    offersCount.textContent = selectedOfferIds().length + " di " + total + " selezionate";
+  }
+
+  function formatSpeed(value, direction) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) { return ""; }
+    return number.toFixed(2).replace(".", ",") + " Mbps in " + direction;
+  }
+
+  function refreshBulkTechnologySpeeds() {
+    const select = document.getElementById("bulk-technology");
+    if (!select) { return; }
+    const option = select.selectedOptions[0];
+    const download = option && option.dataset.download ? option.dataset.download : "";
+    const upload = option && option.dataset.upload ? option.dataset.upload : "";
+    const downloadInput = document.querySelector(
+      'input.bulk-derived[data-key="velocita_download"]'
+    );
+    const uploadInput = document.querySelector(
+      'input.bulk-derived[data-key="velocita_upload"]'
+    );
+    if (downloadInput) {
+      downloadInput.value = download ? formatSpeed(download, "Download") : "";
+    }
+    if (uploadInput) {
+      uploadInput.value = upload ? formatSpeed(upload, "Upload") : "";
+    }
+  }
+
+  function collectItems() {
+    const items = [];
+    const techSelect = document.getElementById("bulk-technology");
+    if (techSelect && techSelect.value) {
+      items.push({ target_kind: "technology", technology_id: techSelect.value });
+    }
+    document.querySelectorAll("input.bulk-field").forEach(function (input) {
+      const value = input.value.trim();
+      if (value) {
+        items.push({
+          target_kind: "template_field",
+          template_field_key: input.dataset.key,
+          new_value: value
+        });
+      }
+    });
+    document.querySelectorAll("input.bulk-voce").forEach(function (input) {
+      const value = input.value.trim();
+      if (value) {
+        items.push({
+          target_kind: "voce",
+          voce_id: input.dataset.voceId,
+          new_value: value
+        });
+      }
+    });
+    return items;
+  }
+
+  function renderPreview(data) {
+    operationId = data.operation_id;
+    previewBody.textContent = "";
+    data.targets.forEach(function (target) {
+      const row = document.createElement("tr");
+      row.appendChild(el("td", "", target.offer_name));
+      row.appendChild(el("td", "esito-" + target.outcome,
+                         OUTCOME_LABELS[target.outcome] || target.outcome));
+      row.appendChild(el("td", "muted", target.reason || "—"));
+      previewBody.appendChild(row);
+    });
+    previewCounts.textContent = formatCounts(data.counts);
+    previewCard.style.display = "";
+    applyBtn.disabled = false;
+    applyBtn.textContent = "Applica";
+  }
+
+  async function requestPreview() {
+    const items = collectItems();
+    if (!items.length) {
+      window.W3Modal.openError("Scrivi almeno un valore: i campi vuoti non vengono toccati.");
+      return;
+    }
+    const offerIds = selectedOfferIds();
+    if (!offerIds.length) {
+      window.W3Modal.openError("Seleziona almeno un'offerta.");
+      return;
+    }
+    setResult("Anteprima in corso…", false);
+    previewBtn.disabled = true;
+    try {
+      const response = await fetch("/api/bulk/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ offer_ids: offerIds, items: items })
+      });
+      if (!response.ok) {
+        const problem = await response.json().catch(function () { return null; });
+        const detail = problem && typeof problem.detail === "string"
+          ? problem.detail : "HTTP " + response.status;
+        throw new Error(detail);
+      }
+      renderPreview(await response.json());
+      setResult("", false);
+    } catch (error) {
+      setResult("");
+      window.W3Modal.openError("Anteprima non riuscita: " + error.message);
+    } finally {
+      previewBtn.disabled = false;
+    }
+  }
+
+  function confirmApply() {
+    if (!operationId) { return; }
+    window.W3Modal.open(
+      "Applicare le modifiche?",
+      "Le modifiche dell'anteprima verranno applicate alle offerte selezionate. " +
+        "L'operazione non può essere annullata.",
+      "Applica",
+      applyBulk,
+      "Annulla"
+    );
+  }
+
+  async function applyBulk() {
+    if (!operationId) { return; }
+    setStaleMessage("");
+    setResult("Applicazione in corso…", false);
+    applyBtn.disabled = true;
+    const spinnerTimer = window.setTimeout(function () {
+      spinnerOverlay.hidden = false;
+    }, 400);
+    try {
+      const response = await fetch("/api/bulk/" + operationId + "/apply", { method: "POST" });
+      if (!response.ok) {
+        const problem = await response.json().catch(function () { return null; });
+        const detail = problem && typeof problem.detail === "string"
+          ? problem.detail : "HTTP " + response.status;
+        throw new Error(detail);
+      }
+      window.clearTimeout(spinnerTimer);
+      spinnerOverlay.hidden = true;
+      resetPreview("");
+      window.W3Modal.openInfo("Modifiche applicate",
+        "Le modifiche massive sono state applicate correttamente.");
+    } catch (error) {
+      window.clearTimeout(spinnerTimer);
+      spinnerOverlay.hidden = true;
+      applyBtn.disabled = false;
+      setResult("");
+      window.W3Modal.openError("Applicazione non riuscita: " + error.message);
+    }
+  }
+
+  previewBtn.addEventListener("click", requestPreview);
+  applyBtn.addEventListener("click", confirmApply);
+  if (selectAll) {
+    selectAll.addEventListener("change", function () {
+      document.querySelectorAll("input.offer-check").forEach(function (checkbox) {
+        checkbox.checked = selectAll.checked;
+      });
+      updateOffersCount();
+      markPreviewStale();
+    });
+  }
+  document.querySelectorAll("input.offer-check").forEach(function (checkbox) {
+    checkbox.addEventListener("change", function () {
+      updateOffersCount();
+      markPreviewStale();
+    });
+  });
+  document.querySelectorAll("input.bulk-field, input.bulk-voce, #bulk-technology")
+    .forEach(function (field) {
+      field.addEventListener("input", markPreviewStale);
+      field.addEventListener("change", markPreviewStale);
+    });
+  const technologySelect = document.getElementById("bulk-technology");
+  if (technologySelect) {
+    technologySelect.addEventListener("change", refreshBulkTechnologySpeeds);
+  }
+
+  refreshBulkTechnologySpeeds();
+  updateOffersCount();
+})();
+</script>
+{% endblock %}

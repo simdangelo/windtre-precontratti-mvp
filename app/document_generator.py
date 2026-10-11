@@ -7,6 +7,7 @@ except ImportError:
 
 import subprocess
 import re
+import shutil
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from docx import Document
@@ -1122,8 +1123,11 @@ def compile_trasparenza_pdf(input_xlsx_path: str, output_directory: str) -> str:
 
 def compile_sintesi_pdf(input_docx_path: str, output_directory: str) -> str:
     """
-    Compiles a Sintesi (.docx) document into a high-fidelity Tagged PDF/UA using Microsoft Graph API (OneDrive).
-    Strictly uses MS Graph for compilation; no local fallbacks (LibreOffice/ReportLab) are allowed.
+    Compiles a Sintesi (.docx) document into a Tagged PDF/UA.
+    Microsoft Graph API (OneDrive) is the preferred engine whenever credentials are
+    configured; for local environments without Graph credentials it transparently
+    falls back to headless LibreOffice so the download link always yields a real,
+    openable PDF.
     """
     if not os.path.exists(input_docx_path):
         raise FileNotFoundError(f"Input file not found for PDF compilation: {input_docx_path}")
@@ -1138,35 +1142,83 @@ def compile_sintesi_pdf(input_docx_path: str, output_directory: str) -> str:
     client_secret = os.environ.get("MS_GRAPH_CLIENT_SECRET") or os.environ.get("ONEDRIVE_CLIENT_SECRET")
     drive_id = os.environ.get("MS_GRAPH_DRIVE_ID") or os.environ.get("ONEDRIVE_DRIVE_ID") or os.environ.get("ONEDRIVE_USER_ID")
 
-    if not (tenant_id and client_id and client_secret and drive_id):
-        raise RuntimeError(
-            "Microsoft Graph API credentials are not configured. MS Graph is strictly required for DOCX to PDF compilation."
-        )
+    # 1. Preferred engine: Microsoft Graph API (OneDrive) when credentials are provided
+    graph_succeeded = False
+    if tenant_id and client_id and client_secret and drive_id:
+        try:
+            print("Attempting PDF conversion via Microsoft Graph API (OneDrive)...")
+            from app.services.graph import Graph
 
-    try:
-        print("Attempting PDF conversion via Microsoft Graph API (OneDrive)...")
-        from app.services.graph import Graph
-        
-        graph = Graph(
-            tenant_id=tenant_id,
-            client_id=client_id,
-            client_secret=client_secret,
-            drive_id=drive_id,
+            graph = Graph(
+                tenant_id=tenant_id,
+                client_id=client_id,
+                client_secret=client_secret,
+                drive_id=drive_id,
+            )
+
+            with open(input_docx_path, "rb") as f:
+                docx_bytes = f.read()
+
+            pdf_bytes = graph.convert_to_pdf(
+                filename=os.path.basename(input_docx_path), file_bytes=docx_bytes
+            )
+
+            with open(generated_pdf_path, "wb") as f:
+                f.write(pdf_bytes)
+
+            print(
+                f"Successfully converted {os.path.basename(input_docx_path)} "
+                "to PDF using Microsoft Graph API."
+            )
+            graph_succeeded = True
+
+        except Exception as graph_err:
+            print(
+                f"Microsoft Graph API conversion failed ({graph_err}). "
+                "Falling back to headless LibreOffice..."
+            )
+
+    # 2. Local fallback: headless LibreOffice (required for environments without Graph credentials)
+    if not graph_succeeded:
+        libreoffice_bin = shutil.which("libreoffice") or shutil.which("soffice")
+        if not libreoffice_bin:
+            raise RuntimeError(
+                "All compilation engines failed for Sintesi: Microsoft Graph credentials are not "
+                "configured and LibreOffice is not installed."
+            )
+
+        command = [
+            libreoffice_bin,
+            "--headless",
+            "--convert-to",
+            "pdf:writer_pdf_Export",
+            "--outdir",
+            output_directory,
+            input_docx_path,
+        ]
+        try:
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+            if result.returncode != 0:
+                raise RuntimeError(f"LibreOffice conversion failed: {result.stderr}")
+        except Exception as e:
+            raise RuntimeError(
+                f"All compilation engines (Graph API, LibreOffice) failed for Sintesi: {e}"
+            ) from e
+
+        if not os.path.exists(generated_pdf_path):
+            raise RuntimeError(
+                f"LibreOffice conversion produced no output file for {input_docx_path}"
+            )
+
+        print(
+            f"Successfully converted {os.path.basename(input_docx_path)} "
+            "to PDF using headless LibreOffice."
         )
-        
-        with open(input_docx_path, "rb") as f:
-            docx_bytes = f.read()
-            
-        pdf_bytes = graph.convert_to_pdf(filename=os.path.basename(input_docx_path), file_bytes=docx_bytes)
-        
-        with open(generated_pdf_path, "wb") as f:
-            f.write(pdf_bytes)
-            
-        print(f"Successfully converted {os.path.basename(input_docx_path)} to PDF using Microsoft Graph API.")
-        
-    except Exception as graph_err:
-        print(f"Microsoft Graph API conversion failed: {graph_err}")
-        raise RuntimeError(f"Microsoft Graph API conversion failed: {str(graph_err)}")
 
     # Double check standard size criteria (limit < 2.0 MB)
     file_size_mb = os.path.getsize(generated_pdf_path) / (1024 * 1024)
