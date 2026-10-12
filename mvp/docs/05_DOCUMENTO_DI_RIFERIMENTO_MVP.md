@@ -9,7 +9,7 @@ scope), questo documento raccoglie **decisioni, razionale, modello completo ed
 esempio end-to-end** nello stile dei documenti di progettazione del progetto
 (vedi `riferimenti/`).
 
-**Fonte di verità:** il codice in `app/` e i test in `tests/` (78 test verdi).
+**Fonte di verità:** il codice in `app/` e i test in `tests/` (104 test verdi).
 Dove questo documento e i design in `riferimenti/` divergono, **vince questo
 documento**: i design contengono parti ancora solo su carta (note, Trasparenza,
 mappatura).
@@ -47,7 +47,7 @@ Fisse**:
 4. **modifiche massive** con anteprima, applicazione ed esito per offerta.
 
 Numeri dell'as-built: **13 tabelle** nel database, **6 blocchi / 12 campi /
-7 voci** nel seed del template Fisse, **78 test**, `ruff` e `mypy --strict`
+7 voci** nel seed del template Fisse, **104 test**, `ruff` e `mypy --strict`
 puliti. Stack: Python 3.13, `uv`, FastAPI, SQLAlchemy 2.0, Pydantic v2, SQLite,
 `docxtpl`, Jinja2.
 
@@ -90,6 +90,8 @@ modello o sull'esperienza**. Lo stato indica se è nell'MVP o no.
 | **M24** | **Duplicazione offerta** dalla lista: modale con **nuovo nome obbligatorio e unico** (case-insensitive, controllo client+server); la copia porta anagrafica e **tutta la Sintesi** (valori e righe padre/figlio) e **nasce `NUOVA`, senza codice AGCOM e senza file generati**. | Copia indipendente dalla sorgente; i file DOCX restano solo sull'originale. | [DECISO] · [IMPLEMENTATO] |
 | **M25** | **Governo delle Sintesi generate**: generazione **idempotente** (se la corrente è più recente dell'ultima modifica → `200` "già aggiornata", con opzione `force` per rigenerare comunque) e card **"Sintesi generata"** con **corrente** (badge verde "Aggiornata" / arancione "Superata" + avviso) e **storico versioni** collassato; la barra ricorda quando la Sintesi è superata. | Niente duplicati inutili; l'utente vede sempre quale file è valido e cosa è cambiato dopo. | [DECISO] · [IMPLEMENTATO] |
 | **M26** | **Massiva multi-campo**: pagina `/bulk` con **due box** (selezione **Offerte** e **Cosa modificare**), il secondo con gruppi **"Tabelle fisse"** (tecnologia, campi fissi, **velocità derivate popolate scegliendo la tecnologia**) e **"Tabelle dinamiche"** separati da un divider; **compila solo ciò che vuoi cambiare** (vuoto = non toccare); le voci si aggiornano **dove esistono** e vengono **saltate** dove mancano (nessuna creazione in v1); modello a **item** (`bulk_operation_items`) ed esiti per offerta con **riepilogo** (dettaglio per item nell'API, non in UI); **Applica chiede conferma**, mostra uno **spinner** se lento e una modale di esito **senza conteggi**, restando in pagina; ogni modifica dopo l'anteprima **la resetta**. | Sostituisce la massiva a bersaglio singolo con "crea se manca"/padre di contesto (rimossi). | [DECISO] · [IMPLEMENTATO] |
+| **M27** | **API JSON autocontenuta**: aggiunti in `api.py` gli endpoint di lettura (`GET /api/offers`, `/api/offers/{id}`, `/api/sintesi/template`, `/api/technologies`, `/api/segments`, `/api/technologies/{id}/badge`, `/api/documents/{id}/download`) e `POST /api/offers/{id}/sintesi`; payload con gli stessi campi del JS, tipizzati con `response_model`; composizione in `services/catalog.py` + `services/detail.py` condivisa con `pages.py`; CORS e CRUD dati master fuori scope. Scopo: testare l'app senza frontend e permettere un frontend su altro framework. | L'HTML coesiste (nessuna dismissione). | [DECISO] · [IMPLEMENTATO] |
+| **M28** | **Documentazione interattiva solo API**: le pagine HTML (`pages.py`) sono montate con `include_in_schema=False`, così `/docs` e `/openapi.json` espongono solo gli endpoint sotto `/api`. Gli URL delle pagine restano invariati. | Evita che l'OpenAPI mescoli pagine e API; il frontend/terzi vede solo il contratto JSON. | [DECISO] · [IMPLEMENTATO] |
 
 ### 2.1 Le tre decisioni che spiegano tutto il resto
 
@@ -576,6 +578,12 @@ modificate/inviariate/saltate, valori modificati e voci saltate.
 | POST | `/api/bulk/preview` | JSON | Anteprima (persiste l'operazione) |
 | POST | `/api/bulk/{id}/apply` | JSON | Applica la massiva |
 
+Le **letture JSON** (`GET /api/offers`, `/api/offers/{id}`,
+`/api/sintesi/template`, `/api/technologies`, `/api/segments`,
+`/api/technologies/{id}/badge`, `/api/documents/{id}/download`) e
+`POST /api/offers/{id}/sintesi` sono dettagliate nella sezione "API JSON" di
+`02_FUNZIONALITA_IMPLEMENTATE.md`.
+
 Mappatura errori: `DomainNotFoundError` → 404, `DomainValidationError` → 422,
 `GenerationError` → 500; il form legacy sul nome duplicato risponde 400 con
 messaggio in pagina.
@@ -667,6 +675,8 @@ Sintesi dei limiti (dettaglio e piste in `04_FUORI_SCOPE_E_ROADMAP.md`):
 | M24 duplicazione offerta | `offer.duplicate_offer` (copia Sintesi con remap padre/figlio), `POST /api/offers/{id}/duplicate`, `offers_list.js` (modale con nome) |
 | M25 governo sintesi generate | `generation.render_sintesi` (skip + `force`, confronto `generated_at`/`updated_at`), `pages.py` (corrente/storico/superata), card in `offer_detail.html`, `editor.js` (`SINTESI_STALE`, modale "già aggiornata") |
 | M26 massiva multi-campo | `bulk.py` (items + esiti per item), `BulkRequest`/`BulkItemIn`, `bulk.html` (form editor-like + anteprima dettagliata), `bulk_operation_items` |
+| M27 API JSON autocontenuta | `api.py` (endpoint di lettura + `POST /api/offers/{id}/sintesi`), `services/catalog.py`, `services/detail.py`, schemas `SintesiDataRead`/`OfferDetailRead`/`OfferOverviewRead`/…, condivisi con `pages.py` |
+| M28 Docs solo API | `main.py` (`include_router(pages.router, include_in_schema=False)`), test `test_openapi_schema_exposes_only_api_paths` |
 
 ---
 

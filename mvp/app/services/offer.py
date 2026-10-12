@@ -172,14 +172,19 @@ def delete_offer(db: Session, offer_id: uuid.UUID) -> None:
     db.commit()
 
 
-def create_sintesi_document(db: Session, offer_id: uuid.UUID) -> OfferDocument:
-    """Crea (on the fly) il documento Sintesi a DB, se non esiste."""
+def find_sintesi_document(db: Session, offer_id: uuid.UUID) -> OfferDocument | None:
     offer = get_offer(db, offer_id)
-    existing = db.scalar(
+    return db.scalar(
         select(OfferDocument).where(
             OfferDocument.offer_id == offer.id, OfferDocument.doc_type == DocType.SINTESI
         )
     )
+
+
+def create_sintesi_document(db: Session, offer_id: uuid.UUID) -> OfferDocument:
+    """Crea (on the fly) il documento Sintesi a DB, se non esiste."""
+    offer = get_offer(db, offer_id)
+    existing = find_sintesi_document(db, offer_id)
     if existing is not None:
         return existing
     template = db.scalar(

@@ -224,14 +224,33 @@ management, observability.
 dall'app, enum non-native, nessuna dipendenza SQLite-specifica), ma il DB di
 sviluppo/test è SQLite per scelta.
 
-## 14. Naming dei file e consegna
+## 14. API JSON: estensioni fuori scope
+
+**C'è** (decisione M27): una **API JSON** sotto `/api` (elenco/
+dettaglio offerte, template, tecnologie, segmenti, bollino, download) più
+`POST /api/offers/{id}/sintesi`; usa gli stessi services delle pagine e l'HTML
+**coesiste** (nessuna dismissione).
+
+**Mancano**:
+
+- **CORS** (per servire un frontend su un'origine diversa);
+- **paginazione, filtri e versioning** (`/api/v1`);
+- **autenticazione** dell'API (vedi §6);
+- **CRUD dei dati master** (modifica/cancellazione di voci, segmenti,
+  tecnologie).
+
+**Cosa serve**: middleware/parametri FastAPI per CORS e versionamento,
+dipendenze di autenticazione (§6) ed endpoint di scrittura sui dati master con
+le relative validazioni.
+
+## 15. Naming dei file e consegna
 
 **Manca**: regole di naming (nome offerta + tecnologia + prezzo + elemento
 diversificante, vincoli Adobe), PDF per il sito, coesistenza delle versioni.
 
 Oggi il file si chiama `<NomeOfferta>_sintesi_<timestamp>.docx`.
 
-## 15. Migrazione dei documenti esistenti
+## 16. Migrazione dei documenti esistenti
 
 **Manca**: import delle Sintesi storiche (file Word sparsi), in formati
 disomogenei, con segnaposto residui.
@@ -239,7 +258,7 @@ disomogenei, con segnaposto residui.
 **Cosa serve**: parser/censimento e definizione del perimetro (quali offerte
 migrare). È anche l'occasione per popolare il dizionario con le voci reali.
 
-## 16. Debiti tecnici minori (da pulire)
+## 17. Debiti tecnici minori (da pulire)
 
 - query di sola lettura nelle route delle pagine (`pages.py`) invece che nei
   servizi;
@@ -249,7 +268,7 @@ migrare). È anche l'occasione per popolare il dizionario con le voci reali.
 - nessun messaggio "flash" di conferma/errore sulle pagine (solo lo stato in
   pagina "Salvato.").
 
-## 17. Ordine suggerito per la fase 2
+## 18. Ordine suggerito per la fase 2
 
 1. **Trasparenza**: form + generazione Excel (percorso completo più semplice,
    sblocca il ciclo reale di lavoro).

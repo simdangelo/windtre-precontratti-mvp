@@ -7,26 +7,57 @@ from app.schemas.bulk import (
     BulkTargetPreview,
 )
 from app.schemas.offer import (
+    GeneratedDocumentRead,
     OfferCreate,
     OfferCreateFull,
+    OfferDetailRead,
+    OfferDocumentRead,
     OfferDuplicateRequest,
+    OfferOverviewRead,
     OfferResponse,
+    OfferSummary,
+    SegmentRead,
+    TechnologyBrief,
+    TechnologyRead,
 )
-from app.schemas.sintesi import RowIn, SintesiSaveRequest
+from app.schemas.sintesi import (
+    BlockRead,
+    DerivedFieldRead,
+    FixedFieldRead,
+    RowIn,
+    RowRead,
+    SintesiDataRead,
+    SintesiSaveRequest,
+    VoceBrief,
+)
 from app.schemas.voce import VoceCreate
 
 __all__ = [
+    "BlockRead",
     "BulkApplyResponse",
     "BulkChangePreview",
     "BulkItemIn",
     "BulkPreviewResponse",
     "BulkRequest",
     "BulkTargetPreview",
+    "DerivedFieldRead",
+    "FixedFieldRead",
+    "GeneratedDocumentRead",
     "OfferCreate",
     "OfferCreateFull",
+    "OfferDetailRead",
+    "OfferDocumentRead",
     "OfferDuplicateRequest",
+    "OfferOverviewRead",
     "OfferResponse",
+    "OfferSummary",
     "RowIn",
+    "RowRead",
+    "SegmentRead",
+    "SintesiDataRead",
     "SintesiSaveRequest",
+    "TechnologyBrief",
+    "TechnologyRead",
+    "VoceBrief",
     "VoceCreate",
 ]

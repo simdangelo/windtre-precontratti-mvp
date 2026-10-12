@@ -74,6 +74,12 @@ L'interfaccia è server-rendered (Jinja2) con tema scuro nello stile della
 dashboard WINDTRE esistente; le parti interattive (tabelle dinamiche, anteprima
 massiva) usano JavaScript vanilla in `app/static/editor.js` e `editor.css`.
 
+Accanto alle pagine HTML, l'app espone una **superficie API JSON** sotto `/api`
+(elenco/dettaglio offerte, template, tecnologie, segmenti, download) che usa gli
+stessi services, pensata per usare e testare l'applicazione **senza frontend**;
+dettaglio nella sezione "API JSON" del documento
+[02](02_FUNZIONALITA_IMPLEMENTATE.md).
+
 ## 4. Stack e architettura
 
 | Livello | Tecnologia |

@@ -1,7 +1,7 @@
 # 02 — Funzionalità implementate
 
-Stato al 10 ottobre 2026. Tutto ciò che è descritto qui **esiste ed è coperto
-da test** (78 test, tutti verdi) salvo dove diversamente indicato.
+Stato al 12 ottobre 2026. Tutto ciò che è descritto qui **esiste ed è coperto
+da test** (104 test, tutti verdi) salvo dove diversamente indicato.
 
 ## 1. Bootstrap automatico del database
 
@@ -310,11 +310,43 @@ reintrodurle sono nel documento **04, §12**.
 
 Errori: eccezioni di dominio → `404` (non trovato), `422` (validazione),
 `500` (generazione); il form legacy risponde `400` con messaggio in pagina sul
-nome duplicato.
+nome duplicato. Nota: gli URL **storici senza prefisso**
+(`/technologies/{id}/badge`, `/documents/{id}/download`) restano per le pagine
+HTML; l'API espone gli stessi file con il prefisso `/api/...` (vedi §10).
 
-## 10. Test e qualità
+## 10. API JSON (autocontenuta)
 
-- **78 test** in `tests/`: modelli, seed, schemi, offerte (creazione, elenco,
+Oltre alle pagine HTML, l'applicazione espone un'API JSON completa (prefisso `/api`), pensata per
+testare i flussi **senza frontend** e per un eventuale frontend su un altro framework. Le pagine
+HTML e l'API **coesistono** e usano gli stessi services (nessuna logica duplicata).
+
+| Metodo | Endpoint | Cosa fa |
+|---|---|---|
+| GET | `/api/offers` | elenco offerte con tecnologia e bollino |
+| GET | `/api/offers/{id}` | dettaglio: anagrafica, Sintesi, documento corrente/precedenti, "superata" |
+| GET | `/api/sintesi/template` | struttura Sintesi vuota (blocchi, campi, voci) |
+| GET | `/api/technologies` | tecnologie con velocità e bollino |
+| GET | `/api/segments` | segmenti |
+| GET | `/api/technologies/{id}/badge` | immagine bollino (PNG) |
+| GET | `/api/documents/{id}/download` | file DOCX generato |
+| POST | `/api/offers/{id}/sintesi` | crea il documento Sintesi (`201`); `200` se esisteva già |
+
+Scritture già presenti: `POST /api/offers`, `PUT /api/offers/{id}/sintesi`,
+`POST /api/offers/{id}/generate` (`?force=true` per rigenerare), `POST /api/offers/{id}/duplicate`,
+`DELETE /api/offers/{id}`, `POST /api/voci`, `POST /api/bulk/preview`, `POST /api/bulk/{id}/apply`.
+
+Nota: `GET /api/offers/{id}` esegue il **get-or-create** del documento Sintesi (stesso
+comportamento dell'apertura dell'editor), quindi non è una lettura pura. I payload mantengono gli
+stessi campi già consumati dal JavaScript, tipizzati con `response_model` dove esposto (OpenAPI su
+`/docs`). CORS e CRUD dei dati master restano fuori scope.
+
+Documentazione interattiva: le pagine HTML (`pages.py`) sono escluse dallo schema OpenAPI
+(`include_in_schema=False`), quindi **`/docs` mostra solo gli endpoint sotto `/api`**. Gli URL
+delle pagine restano serviti normalmente.
+
+## 11. Test e qualità
+
+- **104 test** in `tests/`: modelli, seed, schemi, offerte (creazione, elenco,
   Crea Sintesi, form completo, derivati, navigazione, breadcrumb, flag
   `?created=1`, **eliminazione** con cascata e liberazione del nome,
   **duplicazione** con copia della Sintesi, conflitto di nome case-insensitive,
@@ -338,11 +370,16 @@ nome duplicato.
   spinner, reset dell'anteprima, gruppi fisse/dinamiche e velocità derivate**,
   **marchio cliccabile verso l'elenco**, target rimossi alla
   cancellazione dell'offerta), bootstrap.
+- **API JSON**: lettura (forma degli elenchi, **dettaglio con chiavi identiche
+  al JSON embeddato** — anti-drift, template, tecnologie/segmenti, badge e
+  download 200/404, `POST /api/offers/{id}/sintesi` 201/200), i services
+  `catalog`/`detail`, e il test di **ciclo di vita API-only**
+  (create→…→delete senza toccare l'HTML).
 - I test girano su SQLite temporaneo e passano dall'HTTP layer
   (`TestClient` + `dependency_overrides`), come da best-practice.
 - `ruff` e `mypy --strict` puliti.
 
-## 11. Verifiche non coperte da test automatici
+## 12. Verifiche non coperte da test automatici
 
 - Il comportamento JS dell'editor (live update, layout, "Nuova voce…") è
   verificato con uno smoke su DOM simulato, non in un browser reale: un giro
@@ -354,7 +391,7 @@ nome duplicato.
   modifiche"/"Scarta") è lato client: da verificare a mano in browser.
 - Non esiste ancora un test end-to-end in browser (Playwright o simili).
 
-## 12. Limiti noti interni (non funzionali)
+## 13. Limiti noti interni (non funzionali)
 
 - Alcune query di sola lettura vivono nelle route delle pagine
   (`pages.py`) per comodità: accettato per l'MVP, da spostare nei servizi in

@@ -20,3 +20,54 @@ class SintesiSaveRequest(BaseModel):
     technology_id: uuid.UUID | None = None
     status: OfferStatus | None = None
     agcom_code: str = Field(default="", max_length=50)
+
+
+class FixedFieldRead(BaseModel):
+    key: str
+    label: str
+    value: str
+    source_kind: str
+    is_required: bool
+    block_code: str
+    block_title: str
+
+
+class DerivedFieldRead(BaseModel):
+    key: str
+    label: str
+    value: str
+
+
+class VoceBrief(BaseModel):
+    id: str
+    label: str
+
+
+class BlockRead(BaseModel):
+    id: str
+    code: str
+    title: str
+    layout: str
+    voci: list[VoceBrief]
+
+
+class RowRead(BaseModel):
+    id: str
+    block: str
+    parent_row_id: str | None
+    voce_id: str
+    voce_label: str
+    value: str
+    sort_order: int
+
+
+class SintesiDataRead(BaseModel):
+    offer_id: str | None
+    offer_name: str
+    technology_id: str | None
+    status: str | None
+    agcom_code: str | None
+    fixed_fields: list[FixedFieldRead]
+    derived_fields: list[DerivedFieldRead]
+    blocks: list[BlockRead]
+    rows: list[RowRead]

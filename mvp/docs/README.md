@@ -37,7 +37,7 @@ e le definizioni di base (segmenti, tecnologie, template, campi, voci).
 Non serve nessun passo manuale.
 
 ```bash
-uv run pytest        # 78 test
+uv run pytest        # 104 test
 uv run ruff check .  # lint
 uv run mypy app      # type check (strict)
 ```

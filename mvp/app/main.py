@@ -45,5 +45,5 @@ async def generation_handler(_request: Request, exc: GenerationError) -> JSONRes
     return JSONResponse(status_code=500, content={"detail": str(exc)})
 
 
-app.include_router(pages.router)
+app.include_router(pages.router, include_in_schema=False)
 app.include_router(api.router, prefix="/api")
